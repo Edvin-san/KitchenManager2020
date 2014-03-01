@@ -59,6 +59,7 @@ public class Inventory {
 	 */
 	public boolean amountKnown(String prodName) {
 		//TODO
+		//TODO ta bort denna kommentar
 		return false;
 	}
 	
