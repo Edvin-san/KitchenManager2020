@@ -10,13 +10,12 @@ public class Inventory {
 
 	private Connection conn;
 	//TODO
-	//List of prepared statements?
-	//HAHA HOHO
+
 	
 	
 	public Inventory(Connection inConn) {
 		this.conn = inConn; // Connection to database.
-		//HEJHOPP		
+	
 	}
 	
 	
@@ -29,7 +28,6 @@ public class Inventory {
 	public boolean add(String prodName, Integer amount, String unit) {
 		//TODO
 		return false;
-		//HEJHÅHEJHÅ
 	}
 	
 	/**
@@ -40,7 +38,7 @@ public class Inventory {
 	 * 			or the product does not even exist in the database.
 	 */
 	public boolean remove(String prodName, Integer amount) {
-		//TODO //We must do this
+		//TODO
 		return false;
 	}
 	
