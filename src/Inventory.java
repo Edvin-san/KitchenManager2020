@@ -62,7 +62,16 @@ public class Inventory {
 	}
 	
 	/**
-	 * @return Recipes in database.
+	 * 
+	 * @return Product names in database.
+	 */
+	public String [] getProducts() {
+		//TODO
+		return null;
+	}
+	
+	/**
+	 * @return Recipe names in database.
 	 */
 	public String [] getRecipes(){
 		//TODO
