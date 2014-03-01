@@ -12,8 +12,24 @@ public class Inventory {
 	private Connection conn;
 	//TODO
 	
-	public Inventory(Connection inConn) {
-		this.conn = inConn; // Connection to database.
+	public Inventory() {
+		try {
+			Class.forName("org.postgresql.Driver");
+
+			String URL = "jdbc:postgresql://nestor2.csc.kth.se:5432/edvinlun";
+			String USER = "edvinlun";
+			String PASS = "rUGf2QEB";
+			this.conn = DriverManager.getConnection(URL, USER, PASS);
+		}
+		catch(ClassNotFoundException ex) {
+			System.out.println("Error: unable to load driver class!");
+			System.exit(1);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		} catch (Exception e2) {
+			e2.printStackTrace();
+		}
+		
 	}
 	
 	

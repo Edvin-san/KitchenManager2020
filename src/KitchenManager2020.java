@@ -15,8 +15,8 @@ public class KitchenManager2020 {
 	private Kitchen kitchen;
 	
 	
-	public KitchenManager2020(Connection inConn) throws SQLException {
-		this.kitchen = new Kitchen(inConn);
+	public KitchenManager2020() {
+		this.kitchen = new Kitchen();
 		createAndRunGUI();
 	}
 	

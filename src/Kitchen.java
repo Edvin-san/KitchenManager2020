@@ -14,8 +14,8 @@ public class Kitchen {
 	
 	private Inventory inventory;
 	
-	public Kitchen(Connection inConn) throws SQLException {
-		this.inventory = new Inventory(inConn);
+	public Kitchen() {
+		this.inventory = new Inventory();
 	}
 
 	

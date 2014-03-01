@@ -9,29 +9,10 @@ import java.sql.SQLException;
  */
 public class Initializer {
 //TODO Consider moving to Inventory
+	//Moved all code regarding Connections to Inventory
 	
 	public static void main(String [] args) {
-
-
-		try {
-			Class.forName("org.postgresql.Driver");
-
-			String URL = "jdbc:postgresql://nestor2.csc.kth.se:5432/edvinlun";
-			String USER = "edvinlun";
-			String PASS = "rUGf2QEB";
-			Connection conn = DriverManager.getConnection(URL, USER, PASS);
-			new KitchenManager2020(conn);
-		}
-		catch(ClassNotFoundException ex) {
-			System.out.println("Error: unable to load driver class!");
-			System.exit(1);
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		} catch (Exception e2) {
-			e2.printStackTrace();
-		}
-
-
+		new KitchenManager2020();
 	}
 	
 }
