@@ -2,35 +2,31 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
 /**
- * 
+ * THIS IS THE GUI
  * @author edvinlun
  *
  */
 public class KitchenManager2020 {
 	
-	public static void main(String [] args) {
+	public void createAndRunGUI() {
+		// Skapa frame
+		JFrame frame = new JFrame("KitchenManager2020");
+		frame.setResizable(false);
+		frame.setVisible(true);
+		frame.setSize(800, 600);
+		
+		
+		JPanel panel = new JPanel();
+		frame.add(panel);
+		//
+		
+		
 
-
-		try {
-			Class.forName("org.postgresql.Driver");
-
-			String URL = "jdbc:postgresql://nestor2.csc.kth.se:5432/edvinlun";
-			String USER = "edvinlun";
-			String PASS = "rUGf2QEB";
-			Connection conn = DriverManager.getConnection(URL, USER, PASS);
-			new Kitchen(conn);
-		}
-		catch(ClassNotFoundException ex) {
-			System.out.println("Error: unable to load driver class!");
-			System.exit(1);
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		} catch (Exception e2) {
-			e2.printStackTrace();
-		}
-
-
+		
 	}
-			
+	
 }

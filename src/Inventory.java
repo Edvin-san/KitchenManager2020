@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * The inventory encapsulated
@@ -66,7 +67,7 @@ public class Inventory {
 	 * 
 	 * @return Product names in database.
 	 */
-	public String [] getProducts() {
+	public ArrayList<Product> getProducts() {
 		//TODO
 		return null;
 	}

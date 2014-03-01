@@ -6,7 +6,7 @@ import javax.swing.JPanel;
 
 
 /**
- * GUI typ
+ * 
  * @author Edvin Lundberg
  *
  */
