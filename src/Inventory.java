@@ -11,11 +11,13 @@ public class Inventory {
 	private Connection conn;
 	//TODO
 	//List of prepared statements?
-	// hooh
+
+	//nånting bara
 	
 	
 	public Inventory(Connection inConn) {
 		this.conn = inConn; // Connection to database
+		
 	}
 	
 	
