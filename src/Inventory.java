@@ -1,4 +1,4 @@
-import java.sql.Connection;
+import java.sql.*;
 
 /**
  * The inventory encapsulated
@@ -11,8 +11,6 @@ public class Inventory {
 	private Connection conn;
 	//TODO
 	//List of prepared statements?
-
-	//nånting bara
 	
 	
 	public Inventory(Connection inConn) {
@@ -61,7 +59,6 @@ public class Inventory {
 	 */
 	public boolean amountKnown(String prodName) {
 		//TODO
-		//TODO ta bort denna kommentar
 		return false;
 	}
 	
