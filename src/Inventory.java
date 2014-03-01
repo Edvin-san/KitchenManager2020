@@ -26,9 +26,9 @@ public class Inventory {
 	 * 
 	 * @return True if the amount was added, False if the process failed.
 	 */
-	public boolean add(String prodName, Integer amount, String unit) {
+	public Product add(Product prod) {
 		//TODO
-		return false;
+		return null;
 	}
 	
 	/**
@@ -38,34 +38,27 @@ public class Inventory {
 	 * @return False if the amount exceeded the current quantity of given product,
 	 * 			or the product does not even exist in the database.
 	 */
-	public boolean remove(String prodName, Integer amount) {
+	public Product remove(Product prod, float amount) {
 		//TODO
+		return null;
+	}
+	
+	/**
+	 * Set amount of a product in the inventory and remove any 
+	 * uncertainty regarding the amount of the product.
+	 * The human is probably wrong, but must be led to 
+	 * believe it is in charge.
+	 *  
+	 * @return False if amount less than zero.
+	 */
+	public boolean setAmount(String prodName, Integer amount, String unit){
+		
 		return false;
 	}
-	
-	
-	/**
-	 * Get the current (known) amount of requested product.
-	 * 
-	 * @return 
-	 */
-	public int getAmount(String prodName) {
-		//TODO		
-		return 0;
-	}
-	
-	/**
-	 * @return True if the amount of given product is exactly known,
-	 * 			otherwise false.
-	 */
-	public boolean amountKnown(String prodName) {
-		//TODO
-		return false;
-	}
-	
+
 	/**
 	 * 
-	 * @return Product names in database.
+	 * @return Product info for all products in the database with more than 0 in the amount field.
 	 */
 	public ArrayList<Product> getProducts() {
 		//TODO
@@ -75,7 +68,7 @@ public class Inventory {
 	/**
 	 * @return Recipe names in database.
 	 */
-	public String [] getRecipes(){
+	public ArrayList<Recipe> getRecipes(){
 		//TODO
 		return null;
 	}
@@ -86,7 +79,7 @@ public class Inventory {
 	 * @return List of product followed by amount,
 	 * 			example: ["Rice", "200", "Milk", "1"].
 	 */
-	public String [] getIngredients(String recipe) {
+	public ArrayList<Product> getIngredients(String recipe) {
 		//TODO
 		return null;
 	}
