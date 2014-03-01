@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 
 /**
  * A recipe containing
@@ -11,4 +13,8 @@
  */
 public class Recipe {
 
+	public Recipe(String name, String type, String description, ArrayList<Product> productsNeeded) {
+		
+	}
+	
 }
