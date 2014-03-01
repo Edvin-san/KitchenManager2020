@@ -29,6 +29,7 @@ public class Inventory {
 	public boolean add(String prodName, Integer amount, String unit) {
 		//TODO
 		return false;
+		//HEJHÅHEJHÅ
 	}
 	
 	/**
