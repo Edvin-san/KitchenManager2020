@@ -11,11 +11,11 @@ public class Inventory {
 	private Connection conn;
 	//TODO
 	//List of prepared statements?
-	//Listan behövs typ inte
+	//WE MUST STILL PREPARE
 	
 	
 	public Inventory(Connection inConn) {
-		this.conn = inConn;
+		this.conn = inConn; // Connection to database
 	}
 	
 	
