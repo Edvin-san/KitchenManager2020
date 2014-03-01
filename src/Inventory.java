@@ -11,7 +11,7 @@ public class Inventory {
 	private Connection conn;
 	//TODO
 	//List of prepared statements?
-	//HAHA
+	//HAHA HOHO
 	
 	
 	public Inventory(Connection inConn) {
