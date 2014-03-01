@@ -1,3 +1,7 @@
-Hej Martin
-Nu testar jag updatera denna
-Uppdaterar igen
+KitchenManager2020 is a futuristic simulator of a smart kitchen in 2020.
+The idea is that food stuffs are scanned automatically when entering the
+kitchen's various storage facilities. Thus the KitchenManager2020 can 
+calculate if certain recipes can be made or not, and optionally suggest
+a grocery list if ingredients are needed. The user should be able to
+report that a recipe has been made or that a product has been removed 
+from the kitchen. 
