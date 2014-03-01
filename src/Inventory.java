@@ -11,12 +11,9 @@ public class Inventory {
 
 	private Connection conn;
 	//TODO
-
-	
 	
 	public Inventory(Connection inConn) {
 		this.conn = inConn; // Connection to database.
-	
 	}
 	
 	
@@ -51,7 +48,7 @@ public class Inventory {
 	 *  
 	 * @return False if amount less than zero.
 	 */
-	public boolean setAmount(String prodName, Integer amount, String unit){
+	public boolean setAmount(Product p){
 		
 		return false;
 	}

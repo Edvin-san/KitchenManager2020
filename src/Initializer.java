@@ -8,7 +8,8 @@ import java.sql.SQLException;
  *
  */
 public class Initializer {
-
+//TODO Consider moving to Inventory
+	
 	public static void main(String [] args) {
 
 
@@ -19,7 +20,7 @@ public class Initializer {
 			String USER = "edvinlun";
 			String PASS = "rUGf2QEB";
 			Connection conn = DriverManager.getConnection(URL, USER, PASS);
-			new Kitchen(conn);
+			new KitchenManager2020(conn);
 		}
 		catch(ClassNotFoundException ex) {
 			System.out.println("Error: unable to load driver class!");
