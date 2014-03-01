@@ -15,8 +15,8 @@ public class Inventory {
 	
 	
 	public Inventory(Connection inConn) {
-		this.conn = inConn; // Connection to database
-		
+		this.conn = inConn; // Connection to database.
+		//HEJHOPP		
 	}
 	
 	
