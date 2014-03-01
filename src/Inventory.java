@@ -12,6 +12,7 @@ public class Inventory {
 	//TODO
 	//List of prepared statements?
 	//WE MUST STILL PREPARE
+	//HAHA PREPARE PREPARE
 	
 	
 	public Inventory(Connection inConn) {
@@ -38,7 +39,7 @@ public class Inventory {
 	 * 			or the product does not even exist in the database.
 	 */
 	public boolean remove(String prodName, Integer amount) {
-		//TODO
+		//TODO //We must do this
 		return false;
 	}
 	
