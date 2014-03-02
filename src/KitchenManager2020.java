@@ -105,15 +105,11 @@ public class KitchenManager2020 extends JFrame {
 		res = new JTextArea("*Result of your action*");
 		res.setEditable(false);
 		
-		//Add everything to prodPanel
-		prodPanel.add(prodLabel);
-		prodPanel.add(prodName);
-		prodPanel.add(amountLabel);
-		prodPanel.add(amount);
-		prodPanel.add(unitLabel);
-		prodPanel.add(unit);
-		prodPanel.add(resLabel);
-		prodPanel.add(res);
+		//Add above to prodPanel
+		prodPanel.add(prodLabel); prodPanel.add(prodName);
+		prodPanel.add(amountLabel);	prodPanel.add(amount);
+		prodPanel.add(unitLabel); prodPanel.add(unit);
+		prodPanel.add(resLabel); prodPanel.add(res);
 		
 		//Add button
 		addButton = new JButton("Add");
@@ -171,9 +167,11 @@ public class KitchenManager2020 extends JFrame {
 				Iterator<Product> it = prods.iterator();
 				StringBuilder sb = new StringBuilder();
 				
+				Product tmp;
 				// Build string of all product names
 				while (it.hasNext()) {
-					sb.append(it.next().getName() + "\n");
+					tmp = it.next();
+					sb.append(tmp.getName() + " " + tmp.getAmount() + tmp.getUnit() + "\n");
 				}
 				
 				// update result text field
