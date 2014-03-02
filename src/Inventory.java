@@ -80,11 +80,10 @@ public class Inventory {
 		
 		ResultSet retrievedProduct = null;
 		try {			
+			//Do this check first to ensure that the same unit measurement is used
 			getProduct.setString(1, name);
 			retrievedProduct = getProduct.executeQuery();
-			System.out.println("kommer vi hit1?");
 		} catch (SQLException e1) {
-			System.out.println("kommer vi hit2?");
 			//fanns ingen product med detta namn, inget problem.
 		}
 		try {
@@ -94,7 +93,6 @@ public class Inventory {
 				}
 			}
 		} catch (SQLException e1) {
-			System.out.println("kommer vi hit4?");
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
@@ -235,6 +233,17 @@ public class Inventory {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public ArrayList<Recipe> canMake(ArrayList<Recipe> recipesToMake) {
+		ArrayList<Product> availableProducts = getProducts();
+		for(int i = 0; i < recipesToMake.size(); i++){
+			ArrayList<Product> neededProducts = recipesToMake.get(i).getProdsNeeded();
+			//PreparedStatement getFail = conn.prepareStatement("SELECT * FROM need");
+		}
+		
+		return null;
+		
 	}
 
 	//	Statement stat = conn.createStatement();
