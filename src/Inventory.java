@@ -11,6 +11,7 @@ public class Inventory {
 
 	private Connection conn;
 	private PreparedStatement getAllProducts;
+	private PreparedStatement setAmountTo;
 
 	public Inventory() {
 		try {
@@ -29,13 +30,18 @@ public class Inventory {
 		} catch (Exception e2) {
 			e2.printStackTrace();
 		}
+		//Setting up the prepared SQL-queries we will need.
 		try {
-			getAllProducts = conn.prepareStatement("SELECT * FROM product");
+			getAllProducts = conn.prepareStatement("SELECT * FROM product ORDER BY name");
+			setAmountTo = conn.prepareStatement("UPDATE product SET quantity = ?, uncertain = false WHERE name = ?");
+			
 		} catch (SQLException e) {
-			System.out.println("Error: unable to prepare SQL statement.");
+			System.out.println("Error: unable to prepare SQL statements.");
 			e.printStackTrace();
 		}
 		ArrayList<Product> test = new ArrayList<Product>();
+		Product testProduct = new Product("long grain rice", 400, "g", false);
+		setAmount(testProduct);
 		test = getProducts();
 		System.out.println(test);
 	}
@@ -73,8 +79,21 @@ public class Inventory {
 	 * @return False if amount less than zero.
 	 */
 	public boolean setAmount(Product p){
-
-		return false;
+		String name = p.getName();
+		float amount = p.getAmount();
+		if (amount < 0) return false;
+		System.out.println("kommer vi hit");
+		try {
+			setAmountTo.setString(2, name);
+			setAmountTo.setInt(1, (int) amount);
+			System.out.println("kommer vi hit2");
+			setAmountTo.executeUpdate();
+			System.out.println("kommer vi hit3");
+			} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -89,10 +108,8 @@ public class Inventory {
 			//Statement stat = conn.createStatement();
 			//ResultSet allProducts = stat.executeQuery("SELECT * FROM product");
 			while (allProducts.next()) {
-				//System.out.println("Kommer vi hit?");
 				currentProduct = new Product(allProducts.getString(1), allProducts.getInt(2), allProducts.getString(3), allProducts.getBoolean(4));
 				listOfAllProducts.add(currentProduct);
-				//System.out.println(currentProduct);
 			}
 			return listOfAllProducts;
 		} catch (SQLException e) {
