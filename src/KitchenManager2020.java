@@ -22,9 +22,9 @@ import javax.swing.JTextArea;
  *
  * Detta ska stödjas:
  * 
- * Lista food items
- * Lägga till
- * Ta bort
+ * Lista food items X
+ * Lägga till		X
+ * Ta bort			X
  * 
  * Kan (möjligtvis) göra recept?
  * Föreslå det som behövs
