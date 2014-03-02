@@ -65,5 +65,8 @@ public class Recipe {
 	public void setProdsNeeded(ArrayList<Product> prodsNeeded) {
 		this.prodsNeeded = prodsNeeded;
 	}
+	public String toString(){
+		return name + " type: " + type + " description: " + description + " needed ingredients: " + prodsNeeded;
+	}
 	
 }

@@ -15,6 +15,8 @@ public class Inventory {
 	private PreparedStatement getProduct;
 	private PreparedStatement addAmountTo;
 	private PreparedStatement removeAmountFrom;
+	private PreparedStatement getAllRecipes;
+	private PreparedStatement getNeededIng;
 
 	public Inventory() {
 		try {
@@ -38,19 +40,22 @@ public class Inventory {
 			getAllProducts = conn.prepareStatement("SELECT * FROM product ORDER BY name");
 			setAmountTo = conn.prepareStatement("UPDATE product SET quantity = ?, uncertain = ? WHERE name = ?");
 			addAmountTo = conn.prepareStatement("UPDATE product SET quantity = quantity + ? WHERE name = ?; INSERT INTO product (name, quantity, unit, uncertain) SELECT ?, ?, ? ,? WHERE NOT EXISTS (SELECT * FROM product WHERE name = ?)");
-			
-			//"UPDATE product SET quantity = quantity + ? WHERE name = ?; "
+			getAllRecipes = conn.prepareStatement("SELECT * FROM recipe ORDER BY recID");
+			getNeededIng = conn.prepareStatement("SELECT * FROM need");
 			
 		} catch (SQLException e) {
 			System.out.println("Error: unable to prepare SQL statements.");
 			e.printStackTrace();
 		}
 		ArrayList<Product> test = new ArrayList<Product>();
+		ArrayList<Recipe> test2 = new ArrayList<Recipe>();
 		Product testProduct = new Product("testProduct", 500, "g", false);
 		add(testProduct);
 		test = getProducts();
-		System.out.println(test);
+		test2 = getRecipes();
+		System.out.println(test2);
 		System.exit(1);
+
 	}
 
 
@@ -146,8 +151,6 @@ public class Inventory {
 		Product currentProduct;
 		try {
 			ResultSet allProducts = getAllProducts.executeQuery();
-			//Statement stat = conn.createStatement();
-			//ResultSet allProducts = stat.executeQuery("SELECT * FROM product");
 			while (allProducts.next()) {
 				currentProduct = new Product(allProducts.getString(1), allProducts.getInt(2), allProducts.getString(3), allProducts.getBoolean(4));
 				listOfAllProducts.add(currentProduct);
@@ -163,8 +166,20 @@ public class Inventory {
 	 * @return Recipe names in database.
 	 */
 	public ArrayList<Recipe> getRecipes(){
-		//TODO
-		return null;
+		ArrayList<Recipe> listOfAllRecipes = new ArrayList<Recipe>();
+		Recipe currentRecipe;
+		try {
+			ResultSet allRecipes = getAllRecipes.executeQuery();
+			System.out.println(allRecipes);
+			while (allRecipes.next()) {
+				currentRecipe = new Recipe(allRecipes.getString(2), allRecipes.getString(3), allRecipes.getString(4), getIngredients(allRecipes.getInt(1)));
+				listOfAllRecipes.add(currentRecipe);
+			}
+			return listOfAllRecipes;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
@@ -173,9 +188,22 @@ public class Inventory {
 	 * @return List of product followed by amount,
 	 * 			example: ["Rice", "200", "Milk", "1"].
 	 */
-	public ArrayList<Product> getIngredients(String recipe) {
-		//TODO
-		return null;
+	public ArrayList<Product> getIngredients(int recipeID) {
+		//getNeededIng = conn.prepareStatement("SELECT prodName, quantityNeeded, unit FROM need ORDER BY prodName");
+		ArrayList<Product> listOfAllNeededProducts = new ArrayList<Product>();
+		Product currentProduct;
+		try {
+			ResultSet allProducts = getNeededIng.executeQuery();
+
+			while (allProducts.next()) {
+				currentProduct = new Product(allProducts.getString(2), allProducts.getInt(3), allProducts.getString(4), false);
+				listOfAllNeededProducts.add(currentProduct);
+			}
+			return listOfAllNeededProducts;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	//	Statement stat = conn.createStatement();
