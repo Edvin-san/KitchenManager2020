@@ -55,7 +55,10 @@ public class Inventory {
 	 * @return True if the amount was added, False if the process failed.
 	 */
 	public Product add(Product prod) {
-		//TODO
+		String name = prod.getName();
+		float amount = prod.getAmount();
+		String unit = prod.getUnit();
+		if (amount < 0) return null;
 		return null;
 	}
 
