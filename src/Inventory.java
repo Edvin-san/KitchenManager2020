@@ -157,7 +157,7 @@ public class Inventory {
 		try {
 			ResultSet allProducts = getAllProducts.executeQuery();
 			while (allProducts.next()) {
-				currentProduct = new Product(allProducts.getString(1), allProducts.getInt(2), allProducts.getString(3), allProducts.getBoolean(4));
+				currentProduct = new Product(allProducts.getString(1), allProducts.getFloat(2), allProducts.getString(3), allProducts.getBoolean(4));
 				listOfAllProducts.add(currentProduct);
 			}
 			return listOfAllProducts;
@@ -201,7 +201,7 @@ public class Inventory {
 			ResultSet allProducts = getNeededIng.executeQuery();
 
 			while (allProducts.next()) {
-				currentProduct = new Product(allProducts.getString(2), allProducts.getInt(3), allProducts.getString(4), false);
+				currentProduct = new Product(allProducts.getString(2), allProducts.getFloat(3), allProducts.getString(4), false);
 				listOfAllNeededProducts.add(currentProduct);
 			}
 			return listOfAllNeededProducts;
