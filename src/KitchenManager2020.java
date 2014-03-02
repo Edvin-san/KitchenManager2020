@@ -30,7 +30,7 @@ import javax.swing.JTextArea;
  * Föreslå det som behövs
  * Välja flera recept -> generera minimal inköpslista
  * Kunna registrera att man gjort ett recept -> uppdatera inventory
- *
+ * 
  */
 public class KitchenManager2020 extends JFrame {
 
@@ -47,6 +47,8 @@ public class KitchenManager2020 extends JFrame {
 	
 	private JPanel recPanel;
 	private ArrayList<JCheckBox> chkboxes;
+	private JButton canMake;
+	private JButton make;
 
 	/**
 	 * Initializer 
@@ -142,27 +144,41 @@ public class KitchenManager2020 extends JFrame {
 	 */
 	private void setupRecPanel() {
 		recPanel = new JPanel();
-		recPanel.setLayout(new FlowLayout());
+		recPanel.setLayout(new BoxLayout(recPanel,BoxLayout.X_AXIS));
+		JPanel boxPanel = new JPanel();
+		boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.Y_AXIS));
 		JLabel recLabel = new JLabel("Recipes: ");
-		recPanel.add(recLabel);
+		
 		
 		//All recipes get a checkbox
 		ArrayList<Recipe> recipes = kitchen.getRecipes();
-		
 		if (recipes != null) {
 			Iterator<Recipe> it = recipes.iterator();
 			chkboxes = new ArrayList<JCheckBox>();
-			
 			Recipe tmprec;
 			JCheckBox box;
 			while (it.hasNext()) {
 				tmprec = it.next();
 				box = new JCheckBox(tmprec.getName());
 				chkboxes.add(box);
-				recPanel.add(box);
+				boxPanel.add(box);
 			}
 		}
-
+		
+		
+		// can make button
+		canMake = new JButton("Can I make this?");
+		canMake.addActionListener(new canMakeActionListener());
+		
+		// make button
+		make = new JButton("I have now made this.");
+		make.addActionListener(new makeActionListener());
+		
+		
+		recPanel.add(recLabel);
+		recPanel.add(boxPanel);
+		recPanel.add(canMake);
+		recPanel.add(make);
 	}
 
 	class invActionListener implements ActionListener {
@@ -222,13 +238,54 @@ public class KitchenManager2020 extends JFrame {
 		}
 	}
 
-	class dActionListener implements ActionListener {
+	class canMakeActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-
+			// stringbuilder to build our result message
+			StringBuilder sb = new StringBuilder();
+			
+			ArrayList<String> selected = getSelected();
+			ArrayList<Recipe> recips = kitchen.canMake(selected);
+			
+			// Append all recipe-names that can definitely be made
+			for (Recipe r : recips) {
+				if (r.getProdsNeeded() == null) {
+					sb.append(r.getName() + " can definitely be made!\n");
+				}
+			}
+			
+			// Append all recipe-name that can definitely not be made
+			for (String s : selected) {
+				boolean isOK = false;
+				for (Recipe r : recips) {
+					if (r.getName().equals(s)) {
+						isOK = true;
+						break;
+					}
+				}
+				// If isOK is false now, the recipe can definitely not be made
+				if (!isOK) {
+					sb.append(s + " can definitely not be made.\n");
+				}
+			}
+			
+			// Append all recipe-names (which can possibly be made) follow by
+			// a list of suggestions of quantities needed.
+			for (Recipe r : recips) {
+				ArrayList<Product> pr = r.getProdsNeeded();
+				if (pr != null) {
+					sb.append(r.getName() + " can possibly be made, you must ensure that you have atleast: \n");
+					for (Product p : pr) {
+						sb.append("- " + p.getAmount() + p.getUnit() + " of " + p.getName() + "\n");
+					}
+				}
+			}
+			
+			// Show result
+			res.setText(sb.toString());
 		}
 	}
 
-	class eActionListener implements ActionListener {
+	class makeActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 
 		}
@@ -241,5 +298,23 @@ public class KitchenManager2020 extends JFrame {
 	private Product createProduct() {
 		return kitchen.createProduct(prodName.getText(), amount.getText(), unit.getText());
 	}
+	
+	/**
+	 * Read status on checkboxes and return selected recipe-names.
+	 * @return
+	 */
+	private ArrayList<String> getSelected() {
+		ArrayList<String> selected = new ArrayList<String>(); 
+		Iterator<JCheckBox> it = chkboxes.iterator();
+		JCheckBox tmp;
+		while (it.hasNext()) {
+			tmp = it.next();
+			if (tmp.isSelected()) {
+				selected.add(tmp.getText());
+			}
+		}
+		return selected;		
+	}
+	
 
 }

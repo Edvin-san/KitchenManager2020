@@ -77,4 +77,18 @@ public class Kitchen {
 	public ArrayList<Product> getProducts() {
 		return inventory.getProducts();		
 	}
+
+	/**
+	 * 
+	 * @param selected List of selected recipe-names
+	 * @return ArrayList of recipe-object defined:
+	 * 			recipe not present = definitely can't make recipe
+	 * 			recipe has null as prodsNeeded = definitely can make
+	 * 			recipe has some Products in prodsNeeded = 
+	 * 				these products will need to be checked that their
+	 * 				amount is present in the kitchen. 
+	 */
+	public ArrayList<Recipe> canMake(ArrayList<String> selected) {
+		return inventory.canMake(selected);		
+	}
 }
