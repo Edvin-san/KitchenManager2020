@@ -10,6 +10,7 @@ import java.util.Iterator;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -147,7 +148,7 @@ public class KitchenManager2020 extends JFrame {
 			Iterator<Recipe> it = recipes.iterator();
 
 			while (it.hasNext()) {
-				recPanel.add(new Checkbox(it.next().getName()));
+				recPanel.add(new JCheckBox(it.next().getName()));
 			}
 		}
 
