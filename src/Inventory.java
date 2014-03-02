@@ -42,15 +42,19 @@ public class Inventory {
 			addAmountTo = conn.prepareStatement("UPDATE product SET quantity = quantity + ? WHERE name = ?; INSERT INTO product (name, quantity, unit, uncertain) SELECT ?, ?, ? ,? WHERE NOT EXISTS (SELECT * FROM product WHERE name = ?)");
 			getAllRecipes = conn.prepareStatement("SELECT * FROM recipe ORDER BY recID");
 			getNeededIng = conn.prepareStatement("SELECT * FROM need");
-			
+			removeAmountFrom = conn.prepareStatement("UPDATE product SET quantity = CASE WHEN quantity - ? >= 0 THEN quantity - ?"
+					+ "ELSE 0"
+					+ "END "
+					+ "WHERE name = ?");
+
 		} catch (SQLException e) {
 			System.out.println("Error: unable to prepare SQL statements.");
 			e.printStackTrace();
 		}
 		ArrayList<Product> test = new ArrayList<Product>();
 		ArrayList<Recipe> test2 = new ArrayList<Recipe>();
-		Product testProduct = new Product("testProduct", 500, "g", false);
-		add(testProduct);
+		Product testProduct = new Product("testProduct", 6600, "g", false);
+		remove(testProduct);
 		test = getProducts();
 		test2 = getRecipes();
 		System.out.println(test);
