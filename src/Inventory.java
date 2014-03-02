@@ -53,8 +53,8 @@ public class Inventory {
 		add(testProduct);
 		test = getProducts();
 		test2 = getRecipes();
-		System.out.println(test2);
-		System.exit(1);
+		System.out.println(test);
+		//System.exit(1);
 
 	}
 
@@ -65,12 +65,12 @@ public class Inventory {
 	 * 
 	 * @return True if the amount was added, False if the process failed.
 	 */
-	public Product add(Product prod) {
+	public boolean add(Product prod) {
 		String name = prod.getName();
 		float amount = prod.getAmount();
 		String unit = prod.getUnit();
 		boolean uncertain = prod.isKnown();
-		if (amount < 0) return null;
+		if (amount < 0) return false;
 		try {
 			
 //"UPDATE product SET quantity = quantity + ?, WHERE name = ?; INSERT INTO product (name, quantity, unit, uncertain) SELECT ?, ?, ? ,? 
@@ -84,11 +84,11 @@ public class Inventory {
 			addAmountTo.setBoolean(6, uncertain);
 			addAmountTo.setString(7, name);
 			addAmountTo.executeUpdate();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return null;
+			return false;
 		}
-		return null;
 	}
 
 	/**
@@ -99,22 +99,23 @@ public class Inventory {
 	 * @return False if the amount exceeded the current quantity of given product,
 	 * 			or the product does not even exist in the database.
 	 */
-	public Product remove(Product prod) {
+	public boolean remove(Product prod) {
 		String name = prod.getName();
 		float amount = prod.getAmount();
 		String unit = prod.getUnit();
-		if (amount < 0) return null;
+		if (amount < 0) return false;
 		try {
 			removeAmountFrom.setFloat(1, amount);
 			removeAmountFrom.setFloat(2, amount);
 			removeAmountFrom.setString(3, name);
 			removeAmountFrom.executeUpdate();
+			return true;
 } catch (SQLException e) {
 			e.printStackTrace();
-			return null;
+			return false;
 		}
 
-		return null;
+
 	}
 
 	/**
@@ -134,12 +135,12 @@ public class Inventory {
 			setAmountTo.setFloat(1, amount);
 			setAmountTo.setBoolean(2, false);
 			setAmountTo.executeUpdate();
-
+			return true;
 			} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
-		return true;
+
 	}
 
 	/**
