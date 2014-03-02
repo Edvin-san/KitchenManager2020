@@ -64,7 +64,7 @@ public class KitchenManager2020 extends JFrame {
 
 		setupFrame();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(800,600);
+		setSize(1000,600);
 		setLocation(600, 200);
 		
 		setVisible(true);
@@ -90,7 +90,7 @@ public class KitchenManager2020 extends JFrame {
 	 */
 	private void setupProdPanel() {
 		prodPanel = new JPanel();
-		prodPanel.setLayout(new BoxLayout(prodPanel, BoxLayout.LINE_AXIS));
+		prodPanel.setLayout(new BoxLayout(prodPanel, BoxLayout.X_AXIS));
 		
 		//Labels for text fields
 		JLabel prodLabel = new JLabel("Product name: ");
@@ -106,26 +106,34 @@ public class KitchenManager2020 extends JFrame {
 		res.setEditable(false);
 		
 		//Add above to prodPanel
-		prodPanel.add(prodLabel); prodPanel.add(prodName);
-		prodPanel.add(amountLabel);	prodPanel.add(amount);
-		prodPanel.add(unitLabel); prodPanel.add(unit);
-		prodPanel.add(resLabel); prodPanel.add(res);
+		JPanel p1 = new JPanel(); JPanel p2 = new JPanel();
+		JPanel p3 = new JPanel(); JPanel p4 = new JPanel(); p4.setLayout(new BoxLayout(p4, BoxLayout.Y_AXIS));
+		p1.add(prodLabel); p1.add(prodName);
+		p2.add(amountLabel); p2.add(amount);
+		p3.add(unitLabel); p3.add(unit);
+		p4.add(resLabel); p4.add(res);
+		prodPanel.add(p1); prodPanel.add(p2);
+		prodPanel.add(p3); prodPanel.add(p4);
+		
+		JPanel bPanel = new JPanel();
+		bPanel.setLayout(new BoxLayout(bPanel, BoxLayout.Y_AXIS));
 		
 		//Add button
 		addButton = new JButton("Add");
 		addButton.addActionListener(new addActionListener());
-		prodPanel.add(addButton);
+		bPanel.add(addButton);
 
 		//Remove button
 		remButton = new JButton("Remove");
 		remButton.addActionListener(new remActionListener());
-		prodPanel.add(remButton);
+		bPanel.add(remButton);
 		
 		//Inventory button
 		invButton = new JButton("Inventory");
 		invButton.addActionListener(new invActionListener());
-		prodPanel.add(invButton);
+		bPanel.add(invButton);
 
+		prodPanel.add(bPanel);
 
 	}
 
