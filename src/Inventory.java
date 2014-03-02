@@ -18,6 +18,7 @@ public class Inventory {
 	private PreparedStatement getAllRecipes;
 	private PreparedStatement getNeededIng;
 
+
 	public Inventory() {
 		try {
 			Class.forName("org.postgresql.Driver");
@@ -37,6 +38,7 @@ public class Inventory {
 		}
 		//Setting up the prepared SQL-queries we will need.
 		try {
+			getProduct = conn.prepareStatement("SELECT * FROM product WHERE name = ?");
 			getAllProducts = conn.prepareStatement("SELECT * FROM product ORDER BY name");
 			setAmountTo = conn.prepareStatement("UPDATE product SET quantity = ?, uncertain = ? WHERE name = ?");
 			addAmountTo = conn.prepareStatement("UPDATE product SET quantity = quantity + ? WHERE name = ?; INSERT INTO product (name, quantity, unit, uncertain) SELECT ?, ?, ? ,? WHERE NOT EXISTS (SELECT * FROM product WHERE name = ?)");
@@ -70,10 +72,34 @@ public class Inventory {
 	 * @return True if the amount was added, False if the process failed.
 	 */
 	public boolean add(Product prod) {
+		
 		String name = prod.getName();
 		float amount = prod.getAmount();
 		String unit = prod.getUnit();
 		boolean uncertain = prod.isKnown();
+		
+		ResultSet retrievedProduct = null;
+		try {			
+			getProduct.setString(1, name);
+			retrievedProduct = getProduct.executeQuery();
+			System.out.println("kommer vi hit1?");
+		} catch (SQLException e1) {
+			System.out.println("kommer vi hit2?");
+			//fanns ingen product med detta namn, inget problem.
+		}
+		try {
+			if (retrievedProduct.next()) {
+				if(!unit.equals(retrievedProduct.getString(3))){
+					return false; //slänga error istället?
+				}
+			}
+		} catch (SQLException e1) {
+			System.out.println("kommer vi hit4?");
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+
 		if (amount < 0) return false;
 		try {
 			
