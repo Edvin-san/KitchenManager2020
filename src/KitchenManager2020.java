@@ -199,7 +199,17 @@ public class KitchenManager2020 extends JFrame {
 
 	class remActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-
+			Product tp = createProduct();
+			if (tp == null) {
+				res.setText("Cannot remove that amount!");
+			} else {
+				if ( !(kitchen.removeProduct(tp)) ) {
+					res.setText("Something went wrong when trying to add this product :S");
+				} else {
+					res.setText(tp.getAmount() + tp.getUnit() + " of " 
+					+ tp.getName() + " was successfully removed!");
+				}
+			}
 		}
 	}
 

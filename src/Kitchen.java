@@ -67,6 +67,10 @@ public class Kitchen {
 		return inventory.add(p);
 	}
 	
+	public boolean removeProduct(Product p) {
+		return inventory.remove(p);
+	}
+	
 	/**
 	 * @return ArrayList of products in inventory.
 	 */
