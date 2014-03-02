@@ -225,6 +225,25 @@ public class Inventory {
 			return null;
 		}
 	}
+	
+	public ArrayList<Recipe> getRecipes(ArrayList<String> recipes){
+		ArrayList<Recipe> listOfAllRecipes = new ArrayList<Recipe>();
+		Recipe currentRecipe;
+		try {
+			ResultSet allRecipes = getAllRecipes.executeQuery();
+			//System.out.println(allRecipes);
+			while (allRecipes.next()) {
+				currentRecipe = new Recipe(allRecipes.getString(2), allRecipes.getString(3), allRecipes.getString(4), getIngredients(allRecipes.getInt(1)));
+				if(recipes.contains(allRecipes.getString(2))){
+					listOfAllRecipes.add(currentRecipe);
+				}	
+			}
+			return listOfAllRecipes;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 	/**
 	 * 
@@ -301,6 +320,10 @@ public class Inventory {
 
 		return returnList;
 
+	}
+	
+	public ArrayList<Product> shoppingList(){
+		return null;
 	}
 
 	//	Statement stat = conn.createStatement();
