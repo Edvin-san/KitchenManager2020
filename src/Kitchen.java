@@ -66,4 +66,11 @@ public class Kitchen {
 	public boolean addProduct(Product p) {
 		return inventory.add(p);
 	}
+	
+	/**
+	 * @return ArrayList of products in inventory.
+	 */
+	public ArrayList<Product> getProducts() {
+		return inventory.getProducts();		
+	}
 }

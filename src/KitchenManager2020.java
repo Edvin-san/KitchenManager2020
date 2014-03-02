@@ -162,7 +162,24 @@ public class KitchenManager2020 extends JFrame {
 
 	class invActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			System.out.println("HURRA");
+			ArrayList<Product> prods = kitchen.getProducts();
+			
+			if (prods == null) {
+				res.setText("You have no products in your inventory.");
+				return;
+			} else {
+				Iterator<Product> it = prods.iterator();
+				StringBuilder sb = new StringBuilder();
+				
+				// Build string of all product names
+				while (it.hasNext()) {
+					sb.append(it.next().getName() + "\n");
+				}
+				
+				// update result text field
+				res.setText(sb.toString());
+			}
+			
 		}
 	}
 
