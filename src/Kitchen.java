@@ -1,4 +1,4 @@
-import java.sql.* ;  // for standard JDBC programs
+
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;

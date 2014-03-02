@@ -66,4 +66,9 @@ public class Product {
 		this.isKnown = isKnown;
 	}
 	
+	public String toString(){
+		return name + "," + amount + unit + "," + isKnown; 
+	}
+	
+	
 }

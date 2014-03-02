@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class Inventory {
 
 	private Connection conn;
+	private PreparedStatement getAllProducts;
 	//TODO
 	
 	public Inventory() {
@@ -29,7 +30,7 @@ public class Inventory {
 		} catch (Exception e2) {
 			e2.printStackTrace();
 		}
-		
+		getAllProducts = conn.prepareStatement("SELECT * FROM PRODUCT);
 	}
 	
 	
@@ -74,8 +75,13 @@ public class Inventory {
 	 * @return Product info for all products in the database with more than 0 in the amount field.
 	 */
 	public ArrayList<Product> getProducts() {
-		//TODO
-		return null;
+		try {
+			ResultSet allProducts = getAllProducts.getResultSet();
+			return null;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
