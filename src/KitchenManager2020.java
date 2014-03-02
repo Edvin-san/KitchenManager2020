@@ -33,6 +33,7 @@ import javax.swing.JTextArea;
  */
 public class KitchenManager2020 extends JFrame {
 
+	//GUI programming is awesome -_-
 	private Kitchen kitchen;
 	private JPanel prodPanel;
 	private JButton invButton;
@@ -89,17 +90,21 @@ public class KitchenManager2020 extends JFrame {
 	private void setupProdPanel() {
 		prodPanel = new JPanel();
 		prodPanel.setLayout(new BoxLayout(prodPanel, BoxLayout.LINE_AXIS));
+		
+		//Labels for text fields
 		JLabel prodLabel = new JLabel("Product name: ");
 		JLabel amountLabel = new JLabel("Amount: ");
 		JLabel unitLabel = new JLabel("Unit: ");
 		JLabel resLabel = new JLabel("Result: ");
 
-		prodName = new JTextArea("*product name here*");
-		amount = new JTextArea("*amount here*");
-		unit = new JTextArea("*unit*");
+		//Text fields
+		prodName = new JTextArea("*write product name here*");
+		amount = new JTextArea("*write amount here*");
+		unit = new JTextArea("*write unit here*");
 		res = new JTextArea("*Result of your action*");
 		res.setEditable(false);
 		
+		//Add everything to prodPanel
 		prodPanel.add(prodLabel);
 		prodPanel.add(prodName);
 		prodPanel.add(amountLabel);
@@ -109,11 +114,6 @@ public class KitchenManager2020 extends JFrame {
 		prodPanel.add(resLabel);
 		prodPanel.add(res);
 		
-		//Inventory button
-		invButton = new JButton("Inventory");
-		invButton.addActionListener(new invActionListener());
-		prodPanel.add(invButton);
-
 		//Add button
 		addButton = new JButton("Add");
 		addButton.addActionListener(new addActionListener());
@@ -123,7 +123,10 @@ public class KitchenManager2020 extends JFrame {
 		remButton = new JButton("Remove");
 		prodPanel.add(remButton);
 		
-		prodPanel.setSize(800,20);
+		//Inventory button
+		invButton = new JButton("Inventory");
+		invButton.addActionListener(new invActionListener());
+		prodPanel.add(invButton);
 
 
 	}
