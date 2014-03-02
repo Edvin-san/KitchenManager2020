@@ -118,6 +118,7 @@ public class KitchenManager2020 extends JFrame {
 
 		//Remove button
 		remButton = new JButton("Remove");
+		remButton.addActionListener(new remActionListener());
 		prodPanel.add(remButton);
 		
 		//Inventory button
