@@ -60,7 +60,22 @@ public class Inventory {
 		test = getProducts();
 		test2 = getRecipes();
 		System.out.println(test);
+		ArrayList<String> testrecept = new ArrayList<String>();
+		testrecept.add("Mexican Fried Rice");
+		testrecept.add("Mushroom Quesadillas");
+		testrecept.add("Broccoli Stir Fry");
+		System.out.println(canMake(testrecept));
 		//System.exit(1);
+		
+//		Statement stat;
+//		try {
+//			stat = conn.createStatement();
+//			ResultSet countries = stat.executeQuery("INSERT INTO need (recID, prodName, quantityNeeded, unit) VALUES (3, 'olive oil', 40, 'ml'); INSERT INTO need (recID, prodName, quantityNeeded, unit) VALUES (3, 'sesame oil', 30, 'ml'); INSERT INTO need (recID, prodName, quantityNeeded, unit) VALUES (3, 'soy sauce', 20, 'ml'); INSERT INTO need (recID, prodName, quantityNeeded, unit) VALUES (3, 'brown sugar', 50, 'g'); INSERT INTO need (recID, prodName, quantityNeeded, unit) VALUES (3, 'long grain rice', 200, 'g');"); 
+//			} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}	
+//	
 
 	}
 
@@ -72,12 +87,12 @@ public class Inventory {
 	 * @return True if the amount was added, False if the process failed.
 	 */
 	public boolean add(Product prod) {
-		
+
 		String name = prod.getName();
 		float amount = prod.getAmount();
 		String unit = prod.getUnit();
 		boolean uncertain = prod.isKnown();
-		
+
 		ResultSet retrievedProduct = null;
 		try {			
 			//Do this check first to ensure that the same unit measurement is used
@@ -96,16 +111,16 @@ public class Inventory {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 
 		if (amount < 0) return false;
 		try {
-			
-//"UPDATE product SET quantity = quantity + ?, WHERE name = ?; INSERT INTO product (name, quantity, unit, uncertain) SELECT ?, ?, ? ,? 
-		//WHERE NOT EXISTS (SELECT * FROM product WHERE name = ?)
+
+			//"UPDATE product SET quantity = quantity + ?, WHERE name = ?; INSERT INTO product (name, quantity, unit, uncertain) SELECT ?, ?, ? ,? 
+			//WHERE NOT EXISTS (SELECT * FROM product WHERE name = ?)
 			addAmountTo.setFloat(1, amount);
 			addAmountTo.setString(2, name);
-			
+
 			addAmountTo.setString(3, name);
 			addAmountTo.setFloat(4, amount);
 			addAmountTo.setString(5, unit);
@@ -138,7 +153,7 @@ public class Inventory {
 			removeAmountFrom.setString(3, name);
 			removeAmountFrom.executeUpdate();
 			return true;
-} catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -164,7 +179,7 @@ public class Inventory {
 			setAmountTo.setBoolean(2, false);
 			setAmountTo.executeUpdate();
 			return true;
-			} catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -199,7 +214,7 @@ public class Inventory {
 		Recipe currentRecipe;
 		try {
 			ResultSet allRecipes = getAllRecipes.executeQuery();
-			System.out.println(allRecipes);
+			//System.out.println(allRecipes);
 			while (allRecipes.next()) {
 				currentRecipe = new Recipe(allRecipes.getString(2), allRecipes.getString(3), allRecipes.getString(4), getIngredients(allRecipes.getInt(1)));
 				listOfAllRecipes.add(currentRecipe);
@@ -234,16 +249,58 @@ public class Inventory {
 			return null;
 		}
 	}
-	
-	public ArrayList<Recipe> canMake(ArrayList<Recipe> recipesToMake) {
-		ArrayList<Product> availableProducts = getProducts();
+
+	public ArrayList<Recipe> canMake(ArrayList<String> recipesToMake) {
+		String recipeName;
+		ArrayList<Recipe> returnList = new ArrayList<Recipe>();
+		Recipe tempRecipe;
+		ResultSet temp;
 		for(int i = 0; i < recipesToMake.size(); i++){
-			ArrayList<Product> neededProducts = recipesToMake.get(i).getProdsNeeded();
-			//PreparedStatement getFail = conn.prepareStatement("SELECT * FROM need");
+			recipeName = recipesToMake.get(i);
+			try {
+				PreparedStatement getFail = conn.prepareStatement("SELECT prodname, quantity, quantityNeeded, uncertain FROM (recipe JOIN need ON recipe.recID = need.recID AND recipe.name = ? LEFT JOIN product ON product.name = need.prodname) AS temp1 WHERE quantity < quantityNeeded OR quantity IS NULL");
+				getFail.setString(1, recipeName);
+				temp = getFail.executeQuery();
+
+				ArrayList<Product> tempList = new ArrayList<Product>();
+				boolean canMakeRecipe = true;
+				while (temp.next()) {
+					System.out.println("Hittade som inte borde hittats för " + recipeName + " " + temp.getString(1));
+					try{
+						boolean uncertain = temp.getBoolean(4);
+						if(uncertain){
+							//osäkerhet om hur mycket av denna product vi har.
+							Product tempProd = new Product(temp.getString(1), temp.getInt(3), "unit", uncertain);
+							tempList.add(tempProd);
+						} else {
+							canMakeRecipe = false;
+							break; //ingen osäkerhet och vi kan inte göra denna produkt.
+						}
+					} catch (Exception e){
+						//null värde i databasen dvs saknade denna ingrediens helt och kan inte göra detta recept alls.
+						canMakeRecipe = false;
+						break;
+					}
+
+
+				}
+				if(canMakeRecipe){
+					tempRecipe = new Recipe(recipeName, "", "test", tempList);
+					returnList.add(tempRecipe);
+				}
+
+			} catch (SQLException e) {
+				//Allting fanns för receptet.
+				e.printStackTrace();
+				System.out.println("kom vi hit?" + recipeName);
+				tempRecipe = new Recipe(recipeName, "test", "", null);
+				returnList.add(tempRecipe);
+			}
+
 		}
-		
-		return null;
-		
+
+		return returnList;
+
 	}
 
 	//	Statement stat = conn.createStatement();
