@@ -13,6 +13,8 @@ public class Inventory {
 	private PreparedStatement getAllProducts;
 	private PreparedStatement setAmountTo;
 	private PreparedStatement getProduct;
+	private PreparedStatement addAmountTo;
+	private PreparedStatement removeAmountFrom;
 
 	public Inventory() {
 		try {
@@ -35,16 +37,22 @@ public class Inventory {
 		try {
 			getAllProducts = conn.prepareStatement("SELECT * FROM product ORDER BY name");
 			setAmountTo = conn.prepareStatement("UPDATE product SET quantity = ?, uncertain = ? WHERE name = ?");
+			addAmountTo = conn.prepareStatement("UPDATE product SET quantity = quantity + ? WHERE name = ?");
+			removeAmountFrom = conn.prepareStatement("UPDATE product SET quantity = CASE WHEN quantity - ? >= 0 THEN quantity - ?"
+					+ "ELSE 0"
+					+ "END "
+					+ "WHERE name = ?");
 			
 		} catch (SQLException e) {
 			System.out.println("Error: unable to prepare SQL statements.");
 			e.printStackTrace();
 		}
 		ArrayList<Product> test = new ArrayList<Product>();
-		Product testProduct = new Product("long grain rice", 400, "g", false);
-		setAmount(testProduct);
+		Product testProduct = new Product("long grain rice", 500, "g", false);
+		remove(testProduct);
 		test = getProducts();
 		System.out.println(test);
+		System.exit(1);
 	}
 
 
@@ -59,6 +67,14 @@ public class Inventory {
 		float amount = prod.getAmount();
 		String unit = prod.getUnit();
 		if (amount < 0) return null;
+		try {
+			addAmountTo.setFloat(1, amount);
+			addAmountTo.setString(2, name);
+			addAmountTo.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 		return null;
 	}
 
@@ -69,8 +85,21 @@ public class Inventory {
 	 * @return False if the amount exceeded the current quantity of given product,
 	 * 			or the product does not even exist in the database.
 	 */
-	public Product remove(Product prod, float amount) {
-		//TODO
+	public Product remove(Product prod) {
+		String name = prod.getName();
+		float amount = prod.getAmount();
+		String unit = prod.getUnit();
+		if (amount < 0) return null;
+		try {
+			removeAmountFrom.setFloat(1, amount);
+			removeAmountFrom.setFloat(2, amount);
+			removeAmountFrom.setString(3, name);
+			removeAmountFrom.executeUpdate();
+} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+
 		return null;
 	}
 
@@ -88,7 +117,7 @@ public class Inventory {
 		if (amount < 0) return false;
 		try {
 			setAmountTo.setString(3, name);
-			setAmountTo.setInt(1, (int) amount);
+			setAmountTo.setFloat(1, amount);
 			setAmountTo.setBoolean(2, false);
 			setAmountTo.executeUpdate();
 
