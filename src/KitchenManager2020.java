@@ -46,7 +46,7 @@ public class KitchenManager2020 extends JFrame {
 	private JTextArea res;
 	
 	private JPanel recPanel;
-	private Checkbox ch;
+	private ArrayList<JCheckBox> chkboxes;
 
 	/**
 	 * Initializer 
@@ -146,9 +146,15 @@ public class KitchenManager2020 extends JFrame {
 		
 		if (recipes != null) {
 			Iterator<Recipe> it = recipes.iterator();
-
+			chkboxes = new ArrayList<JCheckBox>();
+			
+			Recipe tmprec;
+			JCheckBox box;
 			while (it.hasNext()) {
-				recPanel.add(new JCheckBox(it.next().getName()));
+				tmprec = it.next();
+				box = new JCheckBox(tmprec.getName());
+				chkboxes.add(box);
+				recPanel.add(box);
 			}
 		}
 
@@ -166,8 +172,7 @@ public class KitchenManager2020 extends JFrame {
 			if (tmpProd == null) {
 				res.setText("Not a valid amount!");
 			} else {
-				tmpProd = kitchen.addProduct(tmpProd);
-				if (tmpProd == null) {
+				if ( !(kitchen.addProduct(tmpProd)) ) {
 					res.setText("Something went wrong when trying to add this product :S");
 				} else {
 					res.setText(tmpProd.getAmount() + tmpProd.getUnit() + " of " 

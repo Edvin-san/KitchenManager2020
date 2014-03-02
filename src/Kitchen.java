@@ -61,9 +61,9 @@ public class Kitchen {
 	/**
 	 * 
 	 * @param p Product to be added
-	 * @return Null if process failed, else same product entered. 
+	 * @return False if process failed, else true. 
 	 */
-	public Product addProduct(Product p) {
+	public boolean addProduct(Product p) {
 		return inventory.add(p);
 	}
 }
