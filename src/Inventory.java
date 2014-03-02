@@ -12,6 +12,7 @@ public class Inventory {
 	private Connection conn;
 	private PreparedStatement getAllProducts;
 	private PreparedStatement setAmountTo;
+	private PreparedStatement getProduct;
 
 	public Inventory() {
 		try {
@@ -33,7 +34,7 @@ public class Inventory {
 		//Setting up the prepared SQL-queries we will need.
 		try {
 			getAllProducts = conn.prepareStatement("SELECT * FROM product ORDER BY name");
-			setAmountTo = conn.prepareStatement("UPDATE product SET quantity = ?, uncertain = false WHERE name = ?");
+			setAmountTo = conn.prepareStatement("UPDATE product SET quantity = ?, uncertain = ? WHERE name = ?");
 			
 		} catch (SQLException e) {
 			System.out.println("Error: unable to prepare SQL statements.");
@@ -82,13 +83,12 @@ public class Inventory {
 		String name = p.getName();
 		float amount = p.getAmount();
 		if (amount < 0) return false;
-		System.out.println("kommer vi hit");
 		try {
-			setAmountTo.setString(2, name);
+			setAmountTo.setString(3, name);
 			setAmountTo.setInt(1, (int) amount);
-			System.out.println("kommer vi hit2");
+			setAmountTo.setBoolean(2, false);
 			setAmountTo.executeUpdate();
-			System.out.println("kommer vi hit3");
+
 			} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
