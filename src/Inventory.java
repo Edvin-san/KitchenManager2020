@@ -37,19 +37,17 @@ public class Inventory {
 		try {
 			getAllProducts = conn.prepareStatement("SELECT * FROM product ORDER BY name");
 			setAmountTo = conn.prepareStatement("UPDATE product SET quantity = ?, uncertain = ? WHERE name = ?");
-			addAmountTo = conn.prepareStatement("UPDATE product SET quantity = quantity + ? WHERE name = ?");
-			removeAmountFrom = conn.prepareStatement("UPDATE product SET quantity = CASE WHEN quantity - ? >= 0 THEN quantity - ?"
-					+ "ELSE 0"
-					+ "END "
-					+ "WHERE name = ?");
+			addAmountTo = conn.prepareStatement("UPDATE product SET quantity = quantity + ? WHERE name = ?; INSERT INTO product (name, quantity, unit, uncertain) SELECT ?, ?, ? ,? WHERE NOT EXISTS (SELECT * FROM product WHERE name = ?)");
+			
+			//"UPDATE product SET quantity = quantity + ? WHERE name = ?; "
 			
 		} catch (SQLException e) {
 			System.out.println("Error: unable to prepare SQL statements.");
 			e.printStackTrace();
 		}
 		ArrayList<Product> test = new ArrayList<Product>();
-		Product testProduct = new Product("long grain rice", 500, "g", false);
-		remove(testProduct);
+		Product testProduct = new Product("testProduct", 500, "g", false);
+		add(testProduct);
 		test = getProducts();
 		System.out.println(test);
 		System.exit(1);
@@ -66,10 +64,20 @@ public class Inventory {
 		String name = prod.getName();
 		float amount = prod.getAmount();
 		String unit = prod.getUnit();
+		boolean uncertain = prod.isKnown();
 		if (amount < 0) return null;
 		try {
+			
+//"UPDATE product SET quantity = quantity + ?, WHERE name = ?; INSERT INTO product (name, quantity, unit, uncertain) SELECT ?, ?, ? ,? 
+		//WHERE NOT EXISTS (SELECT * FROM product WHERE name = ?)
 			addAmountTo.setFloat(1, amount);
 			addAmountTo.setString(2, name);
+			
+			addAmountTo.setString(3, name);
+			addAmountTo.setFloat(4, amount);
+			addAmountTo.setString(5, unit);
+			addAmountTo.setBoolean(6, uncertain);
+			addAmountTo.setString(7, name);
 			addAmountTo.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -80,7 +88,8 @@ public class Inventory {
 
 	/**
 	 * Remove an amount from a product in the inventory.
-	 * If NULL amount is removed, all that will remain is the exact known quantity.
+	 * If the amount to be removed is more than in stock the new amount in stock will be 0.
+	 * This method does not affect the uncertain field in the database.
 	 * 
 	 * @return False if the amount exceeded the current quantity of given product,
 	 * 			or the product does not even exist in the database.
