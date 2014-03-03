@@ -1,8 +1,4 @@
-import java.awt.BorderLayout;
-import java.awt.Checkbox;
 import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -44,7 +40,7 @@ public class KitchenManager2020 extends JFrame {
 	private JTextArea amount;
 	private JTextArea unit;
 	private JTextArea res;
-	
+
 	private JPanel recPanel;
 	private ArrayList<JCheckBox> chkboxes;
 	private JButton canMake;
@@ -69,7 +65,7 @@ public class KitchenManager2020 extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(1000,600);
 		setLocation(600, 200);
-		
+
 		setVisible(true);
 	}
 
@@ -94,7 +90,7 @@ public class KitchenManager2020 extends JFrame {
 	private void setupProdPanel() {
 		prodPanel = new JPanel();
 		prodPanel.setLayout(new BoxLayout(prodPanel, BoxLayout.X_AXIS));
-		
+
 		//Labels for text fields
 		JLabel prodLabel = new JLabel("Product name: ");
 		JLabel amountLabel = new JLabel("Amount: ");
@@ -107,7 +103,7 @@ public class KitchenManager2020 extends JFrame {
 		unit = new JTextArea("*write unit here*");
 		res = new JTextArea("*Result of your action*");
 		res.setEditable(false);
-		
+
 		//Add above to prodPanel
 		JPanel p1 = new JPanel(); JPanel p2 = new JPanel();
 		JPanel p3 = new JPanel(); JPanel p4 = new JPanel(); p4.setLayout(new BoxLayout(p4, BoxLayout.Y_AXIS));
@@ -117,10 +113,10 @@ public class KitchenManager2020 extends JFrame {
 		p4.add(resLabel); p4.add(res);
 		prodPanel.add(p1); prodPanel.add(p2);
 		prodPanel.add(p3); prodPanel.add(p4);
-		
+
 		JPanel bPanel = new JPanel();
 		bPanel.setLayout(new BoxLayout(bPanel, BoxLayout.Y_AXIS));
-		
+
 		//Add button
 		addButton = new JButton("Add");
 		addButton.addActionListener(new addActionListener());
@@ -130,7 +126,7 @@ public class KitchenManager2020 extends JFrame {
 		remButton = new JButton("Remove");
 		remButton.addActionListener(new remActionListener());
 		bPanel.add(remButton);
-		
+
 		//Inventory button
 		invButton = new JButton("Inventory");
 		invButton.addActionListener(new invActionListener());
@@ -149,8 +145,8 @@ public class KitchenManager2020 extends JFrame {
 		JPanel boxPanel = new JPanel();
 		boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.Y_AXIS));
 		JLabel recLabel = new JLabel("Recipes: ");
-		
-		
+
+
 		//All recipes get a checkbox
 		ArrayList<Recipe> recipes = kitchen.getRecipes();
 		if (recipes != null) {
@@ -165,51 +161,51 @@ public class KitchenManager2020 extends JFrame {
 				boxPanel.add(box);
 			}
 		}
-		
-		
+
+
 		// can make button
 		canMake = new JButton("Can I make this?");
 		canMake.addActionListener(new canMakeActionListener());
-		
+
 		// shopList button
 		shopList = new JButton("Generate shopping list.");
 		shopList.addActionListener(new shopListActionListener());
-		
+
 		// make button
 		make = new JButton("I have now made this.");
 		make.addActionListener(new makeActionListener());
-		
-		
+
+
 		recPanel.add(recLabel);
 		recPanel.add(boxPanel);
 		recPanel.add(canMake);
 		recPanel.add(shopList);
 		recPanel.add(make);
-		
+
 	}
 
 	class invActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			ArrayList<Product> prods = kitchen.getProducts();
-			
+
 			if (prods == null) {
 				res.setText("You have no products in your inventory.");
 				return;
 			} else {
 				Iterator<Product> it = prods.iterator();
 				StringBuilder sb = new StringBuilder();
-				
+
 				Product tmp;
 				// Build string of all product names
 				while (it.hasNext()) {
 					tmp = it.next();
 					sb.append(tmp.getName() + " " + tmp.getAmount() + tmp.getUnit() + "\n");
 				}
-				
+
 				// update result text field
 				res.setText(sb.toString());
 			}
-			
+
 		}
 	}
 
@@ -223,7 +219,7 @@ public class KitchenManager2020 extends JFrame {
 					res.setText("Something went wrong when trying to add this product :S");
 				} else {
 					res.setText(tmpProd.getAmount() + tmpProd.getUnit() + " of " 
-					+ tmpProd.getName() + " was successfully added!");
+							+ tmpProd.getName() + " was successfully added!");
 				}
 			}
 		}
@@ -239,7 +235,7 @@ public class KitchenManager2020 extends JFrame {
 					res.setText("Something went wrong when trying to add this product :S");
 				} else {
 					res.setText(tp.getAmount() + tp.getUnit() + " of " 
-					+ tp.getName() + " was successfully removed!");
+							+ tp.getName() + " was successfully removed!");
 				}
 			}
 		}
@@ -249,17 +245,17 @@ public class KitchenManager2020 extends JFrame {
 		public void actionPerformed(ActionEvent event) {
 			// stringbuilder to build our result message
 			StringBuilder sb = new StringBuilder();
-			
+
 			ArrayList<String> selected = getSelected();
 			ArrayList<Recipe> recips = kitchen.canMake(selected);
-			
+
 			// Append all recipe-names that can definitely be made
 			for (Recipe r : recips) {
 				if (r.getProdsNeeded().isEmpty()) {
 					sb.append(r.getName() + " can definitely be made!\n");
 				}
 			}
-			
+
 			// Append all recipe-name that can definitely not be made
 			for (String s : selected) {
 				boolean isOK = false;
@@ -274,7 +270,7 @@ public class KitchenManager2020 extends JFrame {
 					sb.append(s + " can definitely not be made.\n");
 				}
 			}
-			
+
 			// Append all recipe-names (which can possibly be made) followed by
 			// a list of suggestions of quantities needed.
 			for (Recipe r : recips) {
@@ -286,7 +282,7 @@ public class KitchenManager2020 extends JFrame {
 					}
 				}
 			}
-			
+
 			// Show result
 			res.setText(sb.toString());
 		}
@@ -294,10 +290,10 @@ public class KitchenManager2020 extends JFrame {
 
 	class makeActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			
+
 			//removal status
 			boolean okrem = kitchen.make(getSelected());
-			
+
 			if (!okrem) {
 				res.setText("Something went wrong. Please try again.");
 			} else {
@@ -305,25 +301,32 @@ public class KitchenManager2020 extends JFrame {
 			}
 		}
 	}
-	
+
 	class shopListActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			StringBuilder sb = new StringBuilder();
-			ArrayList<Product> needed = kitchen.genShopList(getSelected());
-			if (needed.isEmpty()) {
-				sb.append("You have all the products \nneeded to make the selected recipes!");
+			ArrayList<String> selected = getSelected();
+
+			if (selected.isEmpty()) {
+				sb.append("Please select atleast one recipe.");
 			} else {
-				sb.append("To make the selected recipes\nYou will need to buy: \n");
-				for (Product p : needed) {
-					sb.append("- " + p.getAmount() + p.getUnit() + " of " + p.getName() + "\n");
+
+
+				ArrayList<Product> needed = kitchen.genShopList(selected);
+				if (needed.isEmpty()) {
+					sb.append("You have all the products \nneeded to make the selected recipes!");
+				} else {
+					sb.append("To make the selected recipes\nYou will need to buy: \n");
+					for (Product p : needed) {
+						sb.append("- " + p.getAmount() + p.getUnit() + " of " + p.getName() + "\n");
+					}
 				}
 			}
 			
 			res.setText(sb.toString());
-			
 		}
 	}
-	
+
 	/**
 	 * Read input and try to create a product.
 	 * @return Null if invalid input.
@@ -331,9 +334,9 @@ public class KitchenManager2020 extends JFrame {
 	private Product createProduct() {
 		return kitchen.createProduct(prodName.getText(), amount.getText(), unit.getText());
 	}
-	
+
 	/**
-	 * Read status on checkboxes and return selected recipe-names.
+	 * Read status on checkboxes and return selected recipe-names, never null.
 	 * @return
 	 */
 	private ArrayList<String> getSelected() {
@@ -348,5 +351,5 @@ public class KitchenManager2020 extends JFrame {
 		}
 		return selected;		
 	}
-	
+
 }
