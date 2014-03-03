@@ -83,7 +83,7 @@ public class Kitchen {
 	 * @param selected List of selected recipe-names
 	 * @return ArrayList of recipe-object defined:
 	 * 			recipe not present = definitely can't make recipe
-	 * 			recipe has null as prodsNeeded = definitely can make
+	 * 			recipe has 0 products in prodsNeeded = definitely can make
 	 * 			recipe has some Products in prodsNeeded = 
 	 * 				these products will need to be checked that their
 	 * 				amount is present in the kitchen. 

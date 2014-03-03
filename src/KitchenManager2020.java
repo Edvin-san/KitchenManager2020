@@ -248,7 +248,7 @@ public class KitchenManager2020 extends JFrame {
 			
 			// Append all recipe-names that can definitely be made
 			for (Recipe r : recips) {
-				if (r.getProdsNeeded() == null) {
+				if (r.getProdsNeeded().isEmpty()) {
 					sb.append(r.getName() + " can definitely be made!\n");
 				}
 			}
@@ -268,11 +268,11 @@ public class KitchenManager2020 extends JFrame {
 				}
 			}
 			
-			// Append all recipe-names (which can possibly be made) follow by
+			// Append all recipe-names (which can possibly be made) followed by
 			// a list of suggestions of quantities needed.
 			for (Recipe r : recips) {
 				ArrayList<Product> pr = r.getProdsNeeded();
-				if (pr != null) {
+				if (!pr.isEmpty()) {
 					sb.append(r.getName() + " can possibly be made, you must ensure that you have atleast: \n");
 					for (Product p : pr) {
 						sb.append("- " + p.getAmount() + p.getUnit() + " of " + p.getName() + "\n");
