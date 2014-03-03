@@ -313,7 +313,7 @@ public class KitchenManager2020 extends JFrame {
 			if (needed.isEmpty()) {
 				sb.append("You have all the products \nneeded to make the selected recipes!");
 			} else {
-				sb.append("To make the selected recipes\nYou will need to buy: ");
+				sb.append("To make the selected recipes\nYou will need to buy: \n");
 				for (Product p : needed) {
 					sb.append("- " + p.getAmount() + p.getUnit() + " of " + p.getName() + "\n");
 				}
