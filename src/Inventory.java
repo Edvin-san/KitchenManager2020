@@ -339,7 +339,7 @@ public class Inventory {
 		String allRecipes = recipes.toString();
 		System.out.println(allRecipes);
 		try {
-			PreparedStatement getMissing = conn.prepareStatement("SELECT prodname, quantity, quantityNeeded, uncertain FROM (recipe JOIN need ON recipe.recID = need.recID AND recipe.name = " + allRecipes + " LEFT JOIN product ON product.name = need.prodname) AS temp1 WHERE quantity < quantityNeeded OR quantity IS NULL");
+			PreparedStatement getMissing = conn.prepareStatement("SELECT prodname, quantity, quantityNeeded, uncertain FROM (recipe JOIN need ON recipe.recID = need.recID AND (recipe.name = " + allRecipes + ") LEFT JOIN product ON product.name = need.prodname) AS temp1");
 			//getMissing.setString(1, allRecipes);
 			ResultSet neededProds = getMissing.executeQuery();
 			System.out.println("kommer vi hit alls1?");
@@ -348,6 +348,7 @@ public class Inventory {
 				Product currentProduct = new Product(neededProds.getString(1), neededProds.getFloat(3), "unit", false);
 				returnList.add(currentProduct);
 			}
+			System.out.println(returnList.size());
 			return returnList;
 			
 		} catch (SQLException e) {
