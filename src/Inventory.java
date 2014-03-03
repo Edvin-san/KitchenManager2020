@@ -41,13 +41,13 @@ public class Inventory {
 			getProduct = conn.prepareStatement("SELECT * FROM product WHERE name = ?");
 			getAllProducts = conn.prepareStatement("SELECT * FROM product ORDER BY name");
 			setAmountTo = conn.prepareStatement("UPDATE product SET quantity = ?, uncertain = ? WHERE name = ?");
-			addAmountTo = conn.prepareStatement("UPDATE product SET quantity = quantity + ? WHERE name = ?; INSERT INTO product (name, quantity, unit, uncertain) SELECT ?, ?, ? ,? WHERE NOT EXISTS (SELECT * FROM product WHERE name = ?)");
+			addAmountTo = conn.prepareStatement("UPDATE product SET quantity = quantity + ? WHERE name = ? AND unit = ?; INSERT INTO product (name, quantity, unit, uncertain) SELECT ?, ?, ? ,? WHERE NOT EXISTS (SELECT * FROM product WHERE name = ?)");
 			getAllRecipes = conn.prepareStatement("SELECT * FROM recipe ORDER BY recID");
 			getNeededIng = conn.prepareStatement("SELECT * FROM need");
 			removeAmountFrom = conn.prepareStatement("UPDATE product SET quantity = CASE WHEN quantity - ? >= 0 THEN quantity - ?"
 					+ "ELSE 0"
 					+ "END "
-					+ "WHERE name = ?");
+					+ "WHERE name = ? AND unit = ?");
 
 		} catch (SQLException e) {
 			System.out.println("Error: unable to prepare SQL statements.");
@@ -60,11 +60,11 @@ public class Inventory {
 //		test = getProducts();
 //		test2 = getRecipes();
 //		System.out.println(test);
-		ArrayList<String> testrecept = new ArrayList<String>();
-		testrecept.add("Mexican Fried Rice");
-		testrecept.add("Mushroom Quesadillas");
-		testrecept.add("Broccoli Stir Fry");
-		System.out.println(shoppingList(testrecept));
+//		ArrayList<String> testrecept = new ArrayList<String>();
+//		testrecept.add("Mexican Fried Rice");
+//		testrecept.add("Mushroom Quesadillas");
+//		testrecept.add("Broccoli Stir Fry");
+//		System.out.println(shoppingList(testrecept));
 		//System.out.println(canMake(testrecept));
 		//System.exit(1);
 		
@@ -117,16 +117,15 @@ public class Inventory {
 		if (amount < 0) return false;
 		try {
 
-			//"UPDATE product SET quantity = quantity + ?, WHERE name = ?; INSERT INTO product (name, quantity, unit, uncertain) SELECT ?, ?, ? ,? 
-			//WHERE NOT EXISTS (SELECT * FROM product WHERE name = ?)
 			addAmountTo.setFloat(1, amount);
 			addAmountTo.setString(2, name);
-
-			addAmountTo.setString(3, name);
-			addAmountTo.setFloat(4, amount);
-			addAmountTo.setString(5, unit);
-			addAmountTo.setBoolean(6, uncertain);
-			addAmountTo.setString(7, name);
+			addAmountTo.setString(3, unit);
+			
+			addAmountTo.setString(4, name);
+			addAmountTo.setFloat(5, amount);
+			addAmountTo.setString(6, unit);
+			addAmountTo.setBoolean(7, uncertain);
+			addAmountTo.setString(8, name);
 			addAmountTo.executeUpdate();
 			return true;
 		} catch (SQLException e) {
@@ -147,11 +146,32 @@ public class Inventory {
 		String name = prod.getName();
 		float amount = prod.getAmount();
 		String unit = prod.getUnit();
+		
+		ResultSet retrievedProduct = null;
+		try {			
+			//Do this check first to ensure that the same unit measurement is used
+			getProduct.setString(1, name);
+			retrievedProduct = getProduct.executeQuery();
+		} catch (SQLException e1) {
+			//fanns ingen product med detta namn, inget problem.
+		}
+		try {
+			if (retrievedProduct.next()) {
+				if(!unit.equals(retrievedProduct.getString(3))){
+					return false; //slänga error istället?
+				}
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		if (amount < 0) return false;
 		try {
 			removeAmountFrom.setFloat(1, amount);
 			removeAmountFrom.setFloat(2, amount);
 			removeAmountFrom.setString(3, name);
+			removeAmountFrom.setString(4, unit);
 			removeAmountFrom.executeUpdate();
 			return true;
 		} catch (SQLException e) {
@@ -278,7 +298,7 @@ public class Inventory {
 		for(int i = 0; i < recipesToMake.size(); i++){
 			recipeName = recipesToMake.get(i);
 			try {
-				PreparedStatement getFail = conn.prepareStatement("SELECT prodname, quantity, quantityNeeded, uncertain FROM (recipe JOIN need ON recipe.recID = need.recID AND recipe.name = ? LEFT JOIN product ON product.name = need.prodname) AS temp1 WHERE quantity < quantityNeeded OR quantity IS NULL");
+				PreparedStatement getFail = conn.prepareStatement("SELECT prodname, quantity, quantityNeeded, uncertain, unitToDisplay FROM (SELECT *, temp3.unit AS unitToDisplay FROM (recipe JOIN need ON recipe.recID = need.recID AND recipe.name = ?) AS temp3 LEFT JOIN product ON product.name = temp3.prodname) AS temp1 WHERE quantity < quantityNeeded OR quantity IS NULL");
 				getFail.setString(1, recipeName);
 				temp = getFail.executeQuery();
 
@@ -289,7 +309,7 @@ public class Inventory {
 						boolean uncertain = temp.getBoolean(4);
 						if(uncertain){
 							//osäkerhet om hur mycket av denna product vi har.
-							Product tempProd = new Product(temp.getString(1), temp.getInt(3), "unit", uncertain);
+							Product tempProd = new Product(temp.getString(1), temp.getInt(3), temp.getString(5), uncertain);
 							tempList.add(tempProd);
 						} else {
 							canMakeRecipe = false;
@@ -337,7 +357,12 @@ public class Inventory {
 		String allRecipes = recipes.toString();
 		System.out.println(allRecipes);
 		try {
-			PreparedStatement getMissing = conn.prepareStatement("SELECT prodname,  sum(quantityNeeded)- max(coalesce(quantity, 0)) AS needToBuy, MAX(unitToDisplay) FROM (SELECT prodname, quantity, quantityNeeded, unitToDisplay FROM (SELECT temp2.name, prodName, quantity, quantityNeeded, temp2.unit AS unitToDisplay FROM (recipe JOIN need ON recipe.recID = need.recID AND (recipe.name = " + allRecipes + ")) as temp2 LEFT JOIN product ON product.name = temp2.prodname) AS temp1) AS temp32 GROUP BY prodname HAVING sum(quantityNeeded)- max(COALESCE(quantity,0)) > 0"); // 
+			PreparedStatement getMissing = conn.prepareStatement("SELECT prodname,  sum(quantityNeeded)- max(coalesce(quantity, 0)) AS needToBuy, MAX(unitToDisplay) " +
+																	"FROM (SELECT prodname, quantity, quantityNeeded, unitToDisplay " +
+																					"FROM (SELECT temp2.name, prodName, quantity, quantityNeeded, temp2.unit AS unitToDisplay " +
+																							"FROM (recipe JOIN need ON recipe.recID = need.recID AND (recipe.name = " + allRecipes + ")) as temp2 " +
+																									"LEFT JOIN product ON product.name = temp2.prodname) AS temp1) AS temp32 " +
+																	"GROUP BY prodname HAVING sum(quantityNeeded)- max(COALESCE(quantity,0)) > 0"); // 
 			//getMissing.setString(1, allRecipes);
 			ResultSet neededProds = getMissing.executeQuery();
 
