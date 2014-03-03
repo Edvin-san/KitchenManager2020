@@ -208,6 +208,7 @@ public class Inventory {
 	}
 
 	/**
+	 * Returns all the products currently available (quantity > 0) in the kitchen database.
 	 * 
 	 * @return Product info for all products in the database with more than 0 in the amount field.
 	 */
@@ -228,7 +229,9 @@ public class Inventory {
 	}
 
 	/**
-	 * @return Recipe names in database.
+	 * Returns all recipes currently in the database.
+	 * 
+	 * @return Recipe names and info in database.
 	 */
 	public ArrayList<Recipe> getRecipes(){
 		ArrayList<Recipe> listOfAllRecipes = new ArrayList<Recipe>();
@@ -247,6 +250,12 @@ public class Inventory {
 		}
 	}
 	
+	/**
+	 * Returns the recipes specified in the input.
+	 * 
+	 * @param recipes names of the recipes to be retrieved.
+	 * @return
+	 */
 	public ArrayList<Recipe> getRecipes(ArrayList<String> recipes){
 		ArrayList<Recipe> listOfAllRecipes = new ArrayList<Recipe>();
 		Recipe currentRecipe;
@@ -298,7 +307,11 @@ public class Inventory {
 		for(int i = 0; i < recipesToMake.size(); i++){
 			recipeName = recipesToMake.get(i);
 			try {
-				PreparedStatement getFail = conn.prepareStatement("SELECT prodname, quantity, quantityNeeded, uncertain, unitToDisplay FROM (SELECT *, temp3.unit AS unitToDisplay FROM (recipe JOIN need ON recipe.recID = need.recID AND recipe.name = ?) AS temp3 LEFT JOIN product ON product.name = temp3.prodname) AS temp1 WHERE quantity < quantityNeeded OR quantity IS NULL");
+				PreparedStatement getFail = conn.prepareStatement("SELECT prodname, quantity, quantityNeeded, uncertain, unitToDisplay " +
+																	"FROM (SELECT *, temp3.unit AS unitToDisplay " +
+																			"FROM (recipe JOIN need ON recipe.recID = need.recID AND recipe.name = ?) AS temp3 " +
+																					"LEFT JOIN product ON product.name = temp3.prodname) AS temp1 " +
+																					"WHERE quantity < quantityNeeded OR quantity IS NULL");
 				getFail.setString(1, recipeName);
 				temp = getFail.executeQuery();
 
@@ -355,7 +368,6 @@ public class Inventory {
 		}
 		
 		String allRecipes = recipes.toString();
-		System.out.println(allRecipes);
 		try {
 			PreparedStatement getMissing = conn.prepareStatement("SELECT prodname,  sum(quantityNeeded)- max(coalesce(quantity, 0)) AS needToBuy, MAX(unitToDisplay) " +
 																	"FROM (SELECT prodname, quantity, quantityNeeded, unitToDisplay " +
@@ -370,7 +382,6 @@ public class Inventory {
 				Product currentProduct = new Product(neededProds.getString(1), neededProds.getFloat(2), neededProds.getString(3), false);
 				returnList.add(currentProduct);
 			}
-			System.out.println(returnList.size());
 			return returnList;
 			
 		} catch (SQLException e) {
