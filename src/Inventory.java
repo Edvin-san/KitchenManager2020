@@ -337,12 +337,12 @@ public class Inventory {
 		String allRecipes = recipes.toString();
 		System.out.println(allRecipes);
 		try {
-			PreparedStatement getMissing = conn.prepareStatement("SELECT prodname,  sum(quantityNeeded)- max(coalesce(quantity, 0)) AS needToBuy FROM (SELECT prodname, quantity, quantityNeeded, uncertain FROM (recipe JOIN need ON recipe.recID = need.recID AND (recipe.name = " + allRecipes + ") LEFT JOIN product ON product.name = need.prodname) AS temp1) AS temp32 GROUP BY prodname HAVING sum(quantityNeeded)- max(COALESCE(quantity,0)) > 0"); // 
+			PreparedStatement getMissing = conn.prepareStatement("SELECT prodname,  sum(quantityNeeded)- max(coalesce(quantity, 0)) AS needToBuy, MAX(unitToDisplay) FROM (SELECT prodname, quantity, quantityNeeded, unitToDisplay FROM (SELECT temp2.name, prodName, quantity, quantityNeeded, temp2.unit AS unitToDisplay FROM (recipe JOIN need ON recipe.recID = need.recID AND (recipe.name = " + allRecipes + ")) as temp2 LEFT JOIN product ON product.name = temp2.prodname) AS temp1) AS temp32 GROUP BY prodname HAVING sum(quantityNeeded)- max(COALESCE(quantity,0)) > 0"); // 
 			//getMissing.setString(1, allRecipes);
 			ResultSet neededProds = getMissing.executeQuery();
 
 			while (neededProds.next()) {
-				Product currentProduct = new Product(neededProds.getString(1), neededProds.getFloat(2), "unit", false);
+				Product currentProduct = new Product(neededProds.getString(1), neededProds.getFloat(2), neededProds.getString(3), false);
 				returnList.add(currentProduct);
 			}
 			System.out.println(returnList.size());
