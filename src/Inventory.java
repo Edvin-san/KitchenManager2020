@@ -285,7 +285,6 @@ public class Inventory {
 				ArrayList<Product> tempList = new ArrayList<Product>();
 				boolean canMakeRecipe = true;
 				while (temp.next()) {
-					System.out.println("Hittade som inte borde hittats för " + recipeName + " " + temp.getString(1));
 					try{
 						boolean uncertain = temp.getBoolean(4);
 						if(uncertain){
@@ -312,7 +311,6 @@ public class Inventory {
 			} catch (SQLException e) {
 				//Allting fanns för receptet.
 				e.printStackTrace();
-				System.out.println("kom vi hit?" + recipeName);
 				ArrayList<Product> tempList = new ArrayList<Product>();
 				tempRecipe = new Recipe(recipeName, "test", "", tempList);
 				returnList.add(tempRecipe);
@@ -339,12 +337,11 @@ public class Inventory {
 		String allRecipes = recipes.toString();
 		System.out.println(allRecipes);
 		try {
-			PreparedStatement getMissing = conn.prepareStatement("SELECT prodname,  sum(quantityNeeded)- max(quantity) AS needToBuy FROM (SELECT prodname, quantity, quantityNeeded, uncertain FROM (recipe JOIN need ON recipe.recID = need.recID AND (recipe.name = " + allRecipes + ") LEFT JOIN product ON product.name = need.prodname) AS temp1) AS temp32 GROUP BY prodname HAVING sum(quantityNeeded)- max(quantity) > 0");
+			PreparedStatement getMissing = conn.prepareStatement("SELECT prodname,  sum(quantityNeeded)- max(coalesce(quantity, 0)) AS needToBuy FROM (SELECT prodname, quantity, quantityNeeded, uncertain FROM (recipe JOIN need ON recipe.recID = need.recID AND (recipe.name = " + allRecipes + ") LEFT JOIN product ON product.name = need.prodname) AS temp1) AS temp32 GROUP BY prodname HAVING sum(quantityNeeded)- max(COALESCE(quantity,0)) > 0"); // 
 			//getMissing.setString(1, allRecipes);
 			ResultSet neededProds = getMissing.executeQuery();
-			System.out.println("kommer vi hit alls1?");
+
 			while (neededProds.next()) {
-				System.out.println("kommer vi hit alls?");
 				Product currentProduct = new Product(neededProds.getString(1), neededProds.getFloat(2), "unit", false);
 				returnList.add(currentProduct);
 			}
