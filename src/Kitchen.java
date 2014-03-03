@@ -98,6 +98,9 @@ public class Kitchen {
 	 * @return
 	 */
 	public ArrayList<Product> genShopList(ArrayList<String> recipes) {
-		return inventory.genShopList(recipes);
+		
+		return null;
+		//TODO 
+		//return inventory.genShopList(recipes);
 	}
 }

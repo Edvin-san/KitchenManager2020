@@ -280,7 +280,7 @@ public class KitchenManager2020 extends JFrame {
 			for (Recipe r : recips) {
 				ArrayList<Product> pr = r.getProdsNeeded();
 				if (!pr.isEmpty()) {
-					sb.append(r.getName() + " can possibly be made, you must ensure that you have atleast: \n");
+					sb.append(r.getName() + " can possibly be made,\nyou must ensure that you have atleast: \n");
 					for (Product p : pr) {
 						sb.append("- " + p.getAmount() + p.getUnit() + " of " + p.getName() + "\n");
 					}
@@ -303,7 +303,7 @@ public class KitchenManager2020 extends JFrame {
 			StringBuilder sb = new StringBuilder();
 			ArrayList<Product> needed = kitchen.genShopList(getSelected());
 			if (needed.isEmpty()) {
-				sb.append("You have all the products needed to make the selected recipes!");
+				sb.append("You have all the products \nneeded to make the selected recipes!");
 			} else {
 				sb.append("To make the selected recipes\nYou will need to buy: ");
 				for (Product p : needed) {
