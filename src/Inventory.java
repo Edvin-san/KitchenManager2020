@@ -43,7 +43,7 @@ public class Inventory {
 			setAmountTo = conn.prepareStatement("UPDATE product SET quantity = ?, uncertain = ? WHERE name = ?");
 			addAmountTo = conn.prepareStatement("UPDATE product SET quantity = quantity + ? WHERE name = ? AND unit = ?; INSERT INTO product (name, quantity, unit, uncertain) SELECT ?, ?, ? ,? WHERE NOT EXISTS (SELECT * FROM product WHERE name = ?)");
 			getAllRecipes = conn.prepareStatement("SELECT * FROM recipe ORDER BY recID");
-			getNeededIng = conn.prepareStatement("SELECT * FROM need");
+			getNeededIng = conn.prepareStatement("SELECT * FROM need WHERE recID = ?");
 			removeAmountFrom = conn.prepareStatement("UPDATE product SET quantity = CASE WHEN quantity - ? >= 0 THEN quantity - ?"
 					+ "ELSE 0"
 					+ "END "
@@ -71,12 +71,12 @@ public class Inventory {
 //		Statement stat;
 //		try {
 //			stat = conn.createStatement();
-//			ResultSet countries = stat.executeQuery(""); 
+//			ResultSet countries = stat.executeQuery("INSERT INTO product (name, quantity, unit, uncertain) VALUES ('garlic', 7, 'pc', false);"); 
 //			} catch (SQLException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}	
-//	
+////	
 
 	}
 
@@ -261,10 +261,11 @@ public class Inventory {
 		Recipe currentRecipe;
 		try {
 			ResultSet allRecipes = getAllRecipes.executeQuery();
-			//System.out.println(allRecipes);
 			while (allRecipes.next()) {
 				currentRecipe = new Recipe(allRecipes.getString(2), allRecipes.getString(3), allRecipes.getString(4), getIngredients(allRecipes.getInt(1)));
 				if(recipes.contains(allRecipes.getString(2))){
+					System.out.println("Det går fel här va?");
+					System.out.println(currentRecipe);
 					listOfAllRecipes.add(currentRecipe);
 				}	
 			}
@@ -286,6 +287,7 @@ public class Inventory {
 		ArrayList<Product> listOfAllNeededProducts = new ArrayList<Product>();
 		Product currentProduct;
 		try {
+			getNeededIng.setInt(1, recipeID);
 			ResultSet allProducts = getNeededIng.executeQuery();
 
 			while (allProducts.next()) {

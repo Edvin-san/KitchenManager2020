@@ -115,7 +115,6 @@ public class Kitchen {
 			
 			for(int j = 0; j < temp.size(); j++){
 				inventory.remove(temp.get(j));
-				//System.out.println(temp.get(j));
 			}
 		}
 		return true;
