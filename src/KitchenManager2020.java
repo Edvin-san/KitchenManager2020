@@ -49,6 +49,7 @@ public class KitchenManager2020 extends JFrame {
 	private ArrayList<JCheckBox> chkboxes;
 	private JButton canMake;
 	private JButton make;
+	private JButton shopList;
 
 	/**
 	 * Initializer 
@@ -170,6 +171,10 @@ public class KitchenManager2020 extends JFrame {
 		canMake = new JButton("Can I make this?");
 		canMake.addActionListener(new canMakeActionListener());
 		
+		// shopList button
+		shopList = new JButton("Generate shopping list.");
+		shopList.addActionListener(new shopListActionListener());
+		
 		// make button
 		make = new JButton("I have now made this.");
 		make.addActionListener(new makeActionListener());
@@ -178,7 +183,9 @@ public class KitchenManager2020 extends JFrame {
 		recPanel.add(recLabel);
 		recPanel.add(boxPanel);
 		recPanel.add(canMake);
+		recPanel.add(shopList);
 		recPanel.add(make);
+		
 	}
 
 	class invActionListener implements ActionListener {
@@ -287,7 +294,25 @@ public class KitchenManager2020 extends JFrame {
 
 	class makeActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-
+			
+		}
+	}
+	
+	class shopListActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			StringBuilder sb = new StringBuilder();
+			ArrayList<Product> needed = kitchen.genShopList(getSelected());
+			if (needed.isEmpty()) {
+				sb.append("You have all the products needed to make the selected recipes!");
+			} else {
+				sb.append("To make the selected recipes\nYou will need to buy: ");
+				for (Product p : needed) {
+					sb.append("- " + p.getAmount() + p.getUnit() + " of " + p.getName() + "\n");
+				}
+			}
+			
+			res.setText(sb.toString());
+			
 		}
 	}
 	
@@ -316,5 +341,4 @@ public class KitchenManager2020 extends JFrame {
 		return selected;		
 	}
 	
-
 }

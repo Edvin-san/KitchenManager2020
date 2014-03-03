@@ -91,4 +91,13 @@ public class Kitchen {
 	public ArrayList<Recipe> canMake(ArrayList<String> selected) {
 		return inventory.canMake(selected);		
 	}
+
+	/**
+	 * Generate a shopping list of products. 
+	 * Each product element has an amount needed. 
+	 * @return
+	 */
+	public ArrayList<Product> genShopList(ArrayList<String> recipes) {
+		return inventory.genShopList(recipes);
+	}
 }
