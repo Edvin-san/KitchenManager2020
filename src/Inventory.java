@@ -105,7 +105,7 @@ public class Inventory {
 		try {
 			if (retrievedProduct.next()) {
 				if(!unit.equals(retrievedProduct.getString(3))){
-					return false; //slänga error istället?
+					return false; //slï¿½nga error istï¿½llet?
 				}
 			}
 		} catch (SQLException e1) {
@@ -158,7 +158,7 @@ public class Inventory {
 		try {
 			if (retrievedProduct.next()) {
 				if(!unit.equals(retrievedProduct.getString(3))){
-					return false; //slänga error istället?
+					return false; //slï¿½nga error istï¿½llet?
 				}
 			}
 		} catch (SQLException e1) {
@@ -264,8 +264,6 @@ public class Inventory {
 			while (allRecipes.next()) {
 				currentRecipe = new Recipe(allRecipes.getString(2), allRecipes.getString(3), allRecipes.getString(4), getIngredients(allRecipes.getInt(1)));
 				if(recipes.contains(allRecipes.getString(2))){
-					System.out.println("Det går fel här va?");
-					System.out.println(currentRecipe);
 					listOfAllRecipes.add(currentRecipe);
 				}	
 			}
@@ -323,15 +321,15 @@ public class Inventory {
 					try{
 						boolean uncertain = temp.getBoolean(4);
 						if(uncertain){
-							//osäkerhet om hur mycket av denna product vi har.
+							//osï¿½kerhet om hur mycket av denna product vi har.
 							Product tempProd = new Product(temp.getString(1), temp.getInt(3), temp.getString(5), uncertain);
 							tempList.add(tempProd);
 						} else {
 							canMakeRecipe = false;
-							break; //ingen osäkerhet och vi kan inte göra denna produkt.
+							break; //ingen osï¿½kerhet och vi kan inte gï¿½ra denna produkt.
 						}
 					} catch (Exception e){
-						//null värde i databasen dvs saknade denna ingrediens helt och kan inte göra detta recept alls.
+						//null vï¿½rde i databasen dvs saknade denna ingrediens helt och kan inte gï¿½ra detta recept alls.
 						canMakeRecipe = false;
 						break;
 					}
@@ -344,7 +342,7 @@ public class Inventory {
 				}
 
 			} catch (SQLException e) {
-				//Allting fanns för receptet.
+				//Allting fanns fï¿½r receptet.
 				e.printStackTrace();
 				ArrayList<Product> tempList = new ArrayList<Product>();
 				tempRecipe = new Recipe(recipeName, "test", "", tempList);
