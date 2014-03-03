@@ -312,7 +312,8 @@ public class Inventory {
 				//Allting fanns för receptet.
 				e.printStackTrace();
 				System.out.println("kom vi hit?" + recipeName);
-				tempRecipe = new Recipe(recipeName, "test", "", null);
+				ArrayList<Product> tempList = new ArrayList<Product>();
+				tempRecipe = new Recipe(recipeName, "test", "", tempList);
 				returnList.add(tempRecipe);
 			}
 
