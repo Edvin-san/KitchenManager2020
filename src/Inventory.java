@@ -53,24 +53,25 @@ public class Inventory {
 			System.out.println("Error: unable to prepare SQL statements.");
 			e.printStackTrace();
 		}
-		ArrayList<Product> test = new ArrayList<Product>();
-		ArrayList<Recipe> test2 = new ArrayList<Recipe>();
-		Product testProduct = new Product("testProduct", 6600, "g", false);
-		remove(testProduct);
-		test = getProducts();
-		test2 = getRecipes();
-		System.out.println(test);
+//		ArrayList<Product> test = new ArrayList<Product>();
+//		ArrayList<Recipe> test2 = new ArrayList<Recipe>();
+//		Product testProduct = new Product("testProduct", 6600, "g", false);
+//		remove(testProduct);
+//		test = getProducts();
+//		test2 = getRecipes();
+//		System.out.println(test);
 		ArrayList<String> testrecept = new ArrayList<String>();
 		testrecept.add("Mexican Fried Rice");
 		testrecept.add("Mushroom Quesadillas");
 		testrecept.add("Broccoli Stir Fry");
-		System.out.println(canMake(testrecept));
+		System.out.println(shoppingList(testrecept));
+		//System.out.println(canMake(testrecept));
 		//System.exit(1);
 		
 //		Statement stat;
 //		try {
 //			stat = conn.createStatement();
-//			ResultSet countries = stat.executeQuery("INSERT INTO need (recID, prodName, quantityNeeded, unit) VALUES (3, 'olive oil', 40, 'ml'); INSERT INTO need (recID, prodName, quantityNeeded, unit) VALUES (3, 'sesame oil', 30, 'ml'); INSERT INTO need (recID, prodName, quantityNeeded, unit) VALUES (3, 'soy sauce', 20, 'ml'); INSERT INTO need (recID, prodName, quantityNeeded, unit) VALUES (3, 'brown sugar', 50, 'g'); INSERT INTO need (recID, prodName, quantityNeeded, unit) VALUES (3, 'long grain rice', 200, 'g');"); 
+//			ResultSet countries = stat.executeQuery(""); 
 //			} catch (SQLException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
@@ -323,7 +324,37 @@ public class Inventory {
 
 	}
 	
-	public ArrayList<Product> shoppingList(){
+	public ArrayList<Product> shoppingList(ArrayList<String> recipesToBuyFor){
+		StringBuilder recipes = new StringBuilder();
+		recipes.append("'");
+		recipes.append(recipesToBuyFor.get(0));
+		recipes.append("'");
+		ArrayList<Product> returnList = new ArrayList<Product>();
+		for(int i = 1; i < recipesToBuyFor.size(); i++){
+			recipes.append(" OR recipe.name = '");
+			recipes.append(recipesToBuyFor.get(i));
+			recipes.append("'");
+		}
+		
+		String allRecipes = recipes.toString();
+		System.out.println(allRecipes);
+		try {
+			PreparedStatement getMissing = conn.prepareStatement("SELECT prodname, quantity, quantityNeeded, uncertain FROM (recipe JOIN need ON recipe.recID = need.recID AND recipe.name = " + allRecipes + " LEFT JOIN product ON product.name = need.prodname) AS temp1 WHERE quantity < quantityNeeded OR quantity IS NULL");
+			//getMissing.setString(1, allRecipes);
+			ResultSet neededProds = getMissing.executeQuery();
+			System.out.println("kommer vi hit alls1?");
+			while (neededProds.next()) {
+				System.out.println("kommer vi hit alls?");
+				Product currentProduct = new Product(neededProds.getString(2), neededProds.getFloat(3), neededProds.getString(4), false);
+				returnList.add(currentProduct);
+			}
+			return returnList;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//getMissing.setString(1, );
 		return null;
 	}
 
