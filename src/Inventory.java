@@ -92,7 +92,7 @@ public class Inventory {
 		String name = prod.getName();
 		float amount = prod.getAmount();
 		String unit = prod.getUnit();
-		boolean uncertain = prod.isKnown();
+		boolean uncertain = prod.uncertain();
 
 		ResultSet retrievedProduct = null;
 		try {			

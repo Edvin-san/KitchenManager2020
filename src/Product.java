@@ -14,7 +14,7 @@ public class Product {
 	private String name;
 	private float amount;
 	private String unit;
-	private boolean isKnown;
+	private boolean uncertain;
 	
 	public Product(String name, float amount, String unit, boolean knownState) {
 		this.name = name;
@@ -58,16 +58,16 @@ public class Product {
 		return unit;
 	}
 
-	public boolean isKnown() {
-		return isKnown;
+	public boolean uncertain() {
+		return uncertain;
 	}
 
-	public void setKnown(boolean isKnown) {
-		this.isKnown = isKnown;
+	public void setKnown(boolean uncertain) {
+		this.uncertain = uncertain;
 	}
 	
 	public String toString(){
-		return name + "," + amount + unit + "," + isKnown; 
+		return name + "," + amount + unit + "," + uncertain; 
 	}
 	
 	

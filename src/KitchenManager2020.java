@@ -16,15 +16,15 @@ import javax.swing.JTextArea;
  * THIS IS THE GUI
  * @author edvinlun
  *
- * Detta ska stödjas:
+ * Detta ska stï¿½djas:
  * 
  * Lista food items X
- * Lägga till		X
+ * Lï¿½gga till		X
  * Ta bort			X
  * 
- * Kan (möjligtvis) göra recept?
- * Föreslå det som behövs
- * Välja flera recept -> generera minimal inköpslista
+ * Kan (mï¿½jligtvis) gï¿½ra recept?
+ * Fï¿½reslï¿½ det som behï¿½vs
+ * Vï¿½lja flera recept -> generera minimal inkï¿½pslista
  * Kunna registrera att man gjort ett recept -> uppdatera inventory
  * 
  */
@@ -213,7 +213,7 @@ public class KitchenManager2020 extends JFrame {
 		public void actionPerformed(ActionEvent event) {
 			Product tmpProd = createProduct();
 			if (tmpProd == null) {
-				res.setText("Not a valid amount!");
+				res.setText("Invalid input!");
 			} else {
 				if ( !(kitchen.addProduct(tmpProd)) ) {
 					res.setText("Something went wrong when trying to add this product :S");
@@ -229,7 +229,7 @@ public class KitchenManager2020 extends JFrame {
 		public void actionPerformed(ActionEvent event) {
 			Product tp = createProduct();
 			if (tp == null) {
-				res.setText("Cannot remove that amount!");
+				res.setText("Invalid input!");
 			} else {
 				if ( !(kitchen.removeProduct(tp)) ) {
 					res.setText("Something went wrong when trying to remove this product :S");
@@ -295,7 +295,7 @@ public class KitchenManager2020 extends JFrame {
 			boolean okrem = kitchen.make(getSelected());
 
 			if (!okrem) {
-				res.setText("Something went wrong. Please try again.");
+				res.setText("Something went wrong. Please try again.\nPlease select atleast one recipe");
 			} else {
 				res.setText("You have made your recipe(s)\nand the system is up-to-date!");
 			}

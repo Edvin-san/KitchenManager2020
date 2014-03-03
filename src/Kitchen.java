@@ -38,8 +38,10 @@ public class Kitchen {
 		float a = toAmount(amount);
 		if (a < 0) {
 			return null;
+		} else if (prodName.toUpperCase().matches(".*((DROP)|(SELECT)).*") || unit.toUpperCase().matches(".*((DROP)|(SELECT)).*")) {
+			return null;
 		} else {
-			Product prod = new Product(prodName, a, unit, true);
+			Product prod = new Product(prodName, a, unit, false);
 			return prod;
 		}
 	}
@@ -106,7 +108,7 @@ public class Kitchen {
 	 */
 	public boolean make(ArrayList<String> selected) {
 		ArrayList<Recipe> toBeRemoved = inventory.getRecipes(selected);
-		if(toBeRemoved == null){
+		if(toBeRemoved == null || toBeRemoved.isEmpty()){
 			return false;
 		}
 		ArrayList<Product> temp = new ArrayList<Product>();
