@@ -345,7 +345,7 @@ public class Inventory {
 			System.out.println("kommer vi hit alls1?");
 			while (neededProds.next()) {
 				System.out.println("kommer vi hit alls?");
-				Product currentProduct = new Product(neededProds.getString(2), neededProds.getFloat(3), neededProds.getString(4), false);
+				Product currentProduct = new Product(neededProds.getString(1), neededProds.getFloat(3), "unit", false);
 				returnList.add(currentProduct);
 			}
 			return returnList;
