@@ -105,8 +105,20 @@ public class Kitchen {
 	 * Make a set of recipes, ignore any values in database.
 	 */
 	public boolean make(ArrayList<String> selected) {
-		
-		return false;
+		ArrayList<Recipe> toBeRemoved = inventory.getRecipes(selected);
+		if(toBeRemoved == null){
+			return false;
+		}
+		ArrayList<Product> temp = new ArrayList<Product>();
+		for(int i = 0; i < toBeRemoved.size(); i++){
+			temp = toBeRemoved.get(i).getProdsNeeded();
+			
+			for(int j = 0; j < temp.size(); j++){
+				inventory.remove(temp.get(j));
+				//System.out.println(temp.get(j));
+			}
+		}
+		return true;
 		//TODO
 		//return inventory.make(selected);		
 	}
