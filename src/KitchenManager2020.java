@@ -295,6 +295,14 @@ public class KitchenManager2020 extends JFrame {
 	class makeActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			
+			//removal status
+			boolean okrem = kitchen.make(getSelected());
+			
+			if (!okrem) {
+				res.setText("Something went wrong. Please try again.");
+			} else {
+				res.setText("You have made your recipe(s)\nand the system is up-to-date!");
+			}
 		}
 	}
 	

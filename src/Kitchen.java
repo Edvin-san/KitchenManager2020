@@ -103,4 +103,14 @@ public class Kitchen {
 		//TODO 
 		//return inventory.genShopList(recipes);
 	}
+
+	/**
+	 * Make a set of recipes, ignore any values in database.
+	 */
+	public boolean make(ArrayList<String> selected) {
+		
+		return false;
+		//TODO
+		//return inventory.make(selected);		
+	}
 }
