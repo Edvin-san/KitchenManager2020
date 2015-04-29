@@ -40,6 +40,7 @@ public class KitchenManager2020 extends JFrame {
 	private JTextArea amount;
 	private JTextArea unit;
 	private JTextArea res;
+	private int score;
 
 	private JPanel recPanel;
 	private ArrayList<JCheckBox> chkboxes;
